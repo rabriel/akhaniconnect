@@ -1,0 +1,209 @@
+:root {
+    --bs-primary: #e76505;
+    --bs-primary-rgb: 231, 101, 5;
+    --bs-dark: #202124;
+    --bs-dark-rgb: 32, 33, 36;
+    --bs-font-sans-serif: "Open Sans", sans-serif;
+    --ak-primary: #e76505;
+    --ak-text-primary: #202124;
+    --ak-font-primary: "Open Sans", sans-serif;
+}
+
+body {
+    color: var(--ak-text-primary);
+    font-family: var(--ak-font-primary);
+}
+
+.auth-shell {
+    min-height: 100vh;
+    background-image: url("../media/auth/auth-bg.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.auth-shell__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.auth-shell__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.auth-shell .position-relative {
+    z-index: 2;
+}
+
+.text-dark,
+.text-gray-900,
+.text-gray-800,
+.text-gray-700,
+.text-muted,
+.page-title .text-dark,
+.card .text-dark,
+.card-title,
+.form-label,
+.menu-title {
+    color: var(--ak-text-primary) !important;
+}
+
+.badge-light-primary,
+.menu-link.active,
+.menu-link.active .menu-title,
+.menu-link.active .menu-icon i,
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-color: #ffffff;
+    --bs-btn-hover-bg: var(--ak-text-primary);
+    --bs-btn-hover-border-color: var(--ak-text-primary);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-focus-bg: var(--ak-text-primary);
+    --bs-btn-focus-border-color: var(--ak-text-primary);
+    --bs-btn-focus-color: #ffffff;
+    --bs-btn-active-bg: var(--ak-text-primary);
+    --bs-btn-active-border-color: var(--ak-text-primary);
+    --bs-btn-active-color: #ffffff;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-check:checked + .btn-primary,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--ak-text-primary) !important;
+    border-color: var(--ak-text-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-light-primary {
+    color: var(--bs-primary) !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
+    border-color: transparent !important;
+}
+
+.btn-light-primary:hover,
+.btn-light-primary:focus,
+.btn-light-primary:active,
+.btn-check:checked + .btn-light-primary,
+.show > .btn-light-primary.dropdown-toggle {
+    color: #ffffff !important;
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.bg-primary,
+.aside.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.aside .menu > .menu-item > .menu-link.active .menu-icon,
+.aside .menu > .menu-item > .menu-link:hover .menu-icon,
+.aside .menu > .menu-item.show > .menu-link .menu-icon {
+    background-color: #ffffff !important;
+}
+
+.aside .menu > .menu-item > .menu-link.active .menu-icon i,
+.aside .menu > .menu-item > .menu-link:hover .menu-icon i,
+.aside .menu > .menu-item.show > .menu-link .menu-icon i {
+    color: var(--ak-text-primary) !important;
+}
+
+.aside .menu > .menu-item > .menu-link.active .menu-icon .svg-icon svg [fill]:not(.permanent):not(g),
+.aside .menu > .menu-item > .menu-link:hover .menu-icon .svg-icon svg [fill]:not(.permanent):not(g),
+.aside .menu > .menu-item.show > .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--ak-text-primary) !important;
+}
+
+.menu-state-primary .menu-item .menu-link.active,
+.menu-state-primary .menu-item .menu-link:hover:not(.disabled),
+.menu-state-primary .menu-item.hover > .menu-link:not(.disabled) {
+    background-color: rgba(var(--bs-primary-rgb), 0.14) !important;
+}
+
+.menu-state-primary .menu-item .menu-link.active,
+.menu-state-primary .menu-item .menu-link:hover:not(.disabled),
+.menu-state-primary .menu-item.hover > .menu-link:not(.disabled) {
+    color: var(--bs-primary) !important;
+}
+
+.menu-state-primary .menu-item .menu-link.active .menu-icon i,
+.menu-state-primary .menu-item .menu-link.active .menu-title,
+.menu-state-primary .menu-item .menu-link:hover:not(.disabled) .menu-icon i,
+.menu-state-primary .menu-item .menu-link:hover:not(.disabled) .menu-title,
+.menu-state-primary .menu-item.hover > .menu-link:not(.disabled) .menu-icon i,
+.menu-state-primary .menu-item.hover > .menu-link:not(.disabled) .menu-title {
+    color: var(--bs-primary) !important;
+}
+
+a {
+    color: var(--bs-primary);
+}
+
+a:visited,
+a.link-primary,
+.link-primary,
+.text-hover-primary:hover,
+.btn.btn-active-color-primary:hover,
+.btn.btn-active-color-primary:focus {
+    color: var(--bs-primary) !important;
+}
+
+a:hover,
+a:focus,
+a.link-primary:hover,
+.link-primary:hover {
+    color: #cf5b04;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: rgba(var(--bs-primary-rgb), 0.45);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15);
+}
+
+.swal2-actions .swal2-confirm,
+.swal2-actions .swal2-confirm.btn,
+.swal2-styled.swal2-confirm {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.swal2-actions .swal2-confirm:hover,
+.swal2-actions .swal2-confirm:focus,
+.swal2-actions .swal2-confirm:active,
+.swal2-actions .swal2-confirm.btn:hover,
+.swal2-actions .swal2-confirm.btn:focus,
+.swal2-actions .swal2-confirm.btn:active,
+.swal2-styled.swal2-confirm:hover,
+.swal2-styled.swal2-confirm:focus,
+.swal2-styled.swal2-confirm:active {
+    background-color: #cf5b04 !important;
+    border-color: #cf5b04 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
