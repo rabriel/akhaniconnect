@@ -24,9 +24,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Procurement\DashboardController as ProcurementDashboardController;
 use App\Http\Controllers\Procurement\DirectorController as ProcurementDirectorController;
+use App\Http\Controllers\Procurement\DirectorReportController as ProcurementDirectorReportController;
 use App\Http\Controllers\Procurement\DirectorVerificationController as ProcurementDirectorVerificationController;
 use App\Http\Controllers\Procurement\DocumentController as ProcurementDocumentController;
 use App\Http\Controllers\Procurement\EnterpriseController as ProcurementEnterpriseController;
+use App\Http\Controllers\Procurement\EnterpriseReportController as ProcurementEnterpriseReportController;
 use App\Http\Controllers\Procurement\EnterpriseVerificationController as ProcurementEnterpriseVerificationController;
 use App\Http\Controllers\Procurement\ProfileController as ProcurementProfileController;
 use App\Http\Controllers\Procurement\VerificationController as ProcurementVerificationController;
@@ -77,12 +79,16 @@ Route::middleware('auth')->group(function () {
         ->middleware('can:profile.view')
         ->name('profile.edit');
     Route::put('/account/profile', [ProfileController::class, 'update'])
-        ->middleware('can:profile.update')
+        ->middleware(['can:profile.update', 'identity.verified'])
         ->name('profile.update');
     Route::get('/account/profile/{profile}/avatar', [ProfileController::class, 'showAvatar'])
         ->name('profile.avatar.show');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::put('/notifications/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->middleware('identity.verified')
+        ->name('notifications.index');
+    Route::put('/notifications/{notification}', [NotificationController::class, 'update'])
+        ->middleware('identity.verified')
+        ->name('notifications.update');
 
     Route::middleware(['role:superadmin', 'can:dashboard.view'])->group(function () {
         Route::get('/admin/dashboard', AdminDashboardController::class)->name('admin.dashboard');
@@ -135,10 +141,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/candidate/identity-verification', [CandidateVerificationController::class, 'store'])->name('candidate.identity-verification.store');
     });
 
-    Route::middleware(['role:candidate', 'can:dashboard.view'])->group(function () {
-        Route::get('/candidate/dashboard', CandidateDashboardController::class)
-            ->middleware('identity.verified')
-            ->name('candidate.dashboard');
+    Route::middleware(['role:candidate', 'can:dashboard.view', 'identity.verified'])->group(function () {
+        Route::get('/candidate/dashboard', CandidateDashboardController::class)->name('candidate.dashboard');
         Route::get('/candidate/profile', [CandidateProfileController::class, 'edit'])->name('candidate.profile.edit');
         Route::put('/candidate/profile', [CandidateProfileController::class, 'update'])->name('candidate.profile.update');
         Route::get('/candidate/documents', [CandidateDocumentController::class, 'index'])->name('candidate.documents.index');
@@ -171,16 +175,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/procurement/identity-verification', [ProcurementVerificationController::class, 'storeIdentity'])->name('procurement.identity-verification.store');
     });
 
-    Route::middleware(['role:procurement', 'can:dashboard.view'])->group(function () {
-        Route::get('/procurement/dashboard', ProcurementDashboardController::class)
-            ->middleware('identity.verified')
-            ->name('procurement.dashboard');
+    Route::middleware(['role:procurement', 'can:dashboard.view', 'identity.verified'])->group(function () {
+        Route::get('/procurement/dashboard', ProcurementDashboardController::class)->name('procurement.dashboard');
         Route::get('/procurement/profile', [ProcurementProfileController::class, 'edit'])->name('procurement.profile.edit');
         Route::put('/procurement/profile', [ProcurementProfileController::class, 'update'])->name('procurement.profile.update');
         Route::get('/procurement/enterprise', [ProcurementEnterpriseController::class, 'edit'])->name('procurement.enterprise.edit');
+        Route::get('/procurement/enterprise/report', [ProcurementEnterpriseReportController::class, 'show'])->name('procurement.enterprise.report');
         Route::put('/procurement/enterprise', [ProcurementEnterpriseController::class, 'update'])->name('procurement.enterprise.update');
         Route::post('/procurement/enterprise/verify', [ProcurementEnterpriseVerificationController::class, 'store'])->name('procurement.enterprise.verify');
         Route::get('/procurement/directors', [ProcurementDirectorController::class, 'index'])->name('procurement.directors.index');
+        Route::get('/procurement/directors/{director}', [ProcurementDirectorController::class, 'show'])->name('procurement.directors.show');
+        Route::get('/procurement/directors/{director}/report', [ProcurementDirectorReportController::class, 'show'])->name('procurement.directors.report');
         Route::post('/procurement/directors', [ProcurementDirectorController::class, 'store'])->name('procurement.directors.store');
         Route::post('/procurement/directors/{director}/verify', [ProcurementDirectorVerificationController::class, 'store'])->name('procurement.directors.verify');
         Route::get('/procurement/documents/proof-of-address', [ProcurementDocumentController::class, 'proofOfAddress'])->name('procurement.documents.proof-of-address');

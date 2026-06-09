@@ -321,6 +321,71 @@ class AuthorizationTest extends TestCase
         ]);
     }
 
+    public function test_unverified_candidate_sees_identity_verification_popup_on_shared_profile_page(): void
+    {
+        $this->seed();
+
+        $candidate = User::factory()->withRole(2)->create();
+        $candidate->profile()->create(['country' => 'ZA']);
+        $candidate->candidateProfile()->create();
+
+        $response = $this->actingAs($candidate)->get(route('profile.edit'));
+
+        $response->assertOk();
+        $response->assertSee('You need to verify your ID to proceed.');
+        $response->assertSee('Verify your ID');
+        $response->assertSee('Verify ID To Continue');
+    }
+
+    public function test_unverified_candidate_cannot_update_shared_profile_until_identity_is_verified(): void
+    {
+        $this->seed();
+
+        $candidate = User::factory()->withRole(2)->create([
+            'email' => 'candidate-shared-profile@test.local',
+            'phone' => '0823334444',
+        ]);
+        $candidate->profile()->create(['country' => 'ZA']);
+        $candidate->candidateProfile()->create();
+
+        $response = $this->actingAs($candidate)->put(route('profile.update'), [
+            'first_name' => 'Blocked',
+            'surname' => 'Candidate',
+            'email' => 'candidate-shared-profile@test.local',
+            'phone' => '0823334444',
+            'city' => 'Johannesburg',
+            'province' => 'Gauteng',
+        ]);
+
+        $response->assertRedirect(route('candidate.identity-verification.show'));
+        $response->assertSessionHas('error', 'You need to verify your ID to proceed.');
+    }
+
+    public function test_verified_candidate_sees_read_only_verified_id_number_on_shared_profile_page(): void
+    {
+        $this->seed();
+
+        $candidate = User::factory()->withRole(2)->create();
+        $candidate->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '9106011234087',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
+        $candidate->candidateProfile()->create();
+        $candidate->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
+
+        $response = $this->actingAs($candidate)->get(route('profile.edit'));
+
+        $response->assertOk();
+        $response->assertSee('This ID number was populated from your verified identity record.');
+        $response->assertSee('readonly', false);
+    }
+
     public function test_authenticated_user_can_upload_a_profile_picture(): void
     {
         $this->seed();

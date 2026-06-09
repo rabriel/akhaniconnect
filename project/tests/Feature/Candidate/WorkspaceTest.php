@@ -80,6 +80,11 @@ class WorkspaceTest extends TestCase
         ]);
         $user->profile()->create(['country' => 'ZA']);
         $user->candidateProfile()->create();
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->put(route('candidate.profile.update'), [
             'first_name' => 'Naledi',
@@ -275,6 +280,34 @@ class WorkspaceTest extends TestCase
             ->assertRedirect(route('candidate.identity-verification.show'));
     }
 
+    public function test_unverified_candidate_cannot_access_candidate_workspace_actions(): void
+    {
+        $this->seed();
+
+        $candidate = User::factory()->withRole(2)->create([
+            'email' => 'candidate-lockout@test.local',
+            'phone' => '0825552999',
+        ]);
+        $candidate->profile()->create(['country' => 'ZA']);
+        $candidate->candidateProfile()->create();
+
+        $this->actingAs($candidate)
+            ->get(route('candidate.profile.edit'))
+            ->assertRedirect(route('candidate.identity-verification.show'));
+
+        $updateResponse = $this->actingAs($candidate)->put(route('candidate.profile.update'), [
+            'first_name' => 'Locked',
+            'surname' => 'Candidate',
+            'email' => 'candidate-lockout@test.local',
+            'phone' => '0825552999',
+            'city' => 'Johannesburg',
+            'province' => 'Gauteng',
+        ]);
+
+        $updateResponse->assertRedirect(route('candidate.identity-verification.show'));
+        $updateResponse->assertSessionHas('error', 'You need to verify your ID to proceed.');
+    }
+
     public function test_candidate_can_submit_sa_id_verification(): void
     {
         $this->seed();
@@ -311,6 +344,12 @@ class WorkspaceTest extends TestCase
             'module' => 'sa_identity',
             'status' => 'verified',
             'provider_reference' => 'said-ref-123',
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $candidate->id,
+            'id_number' => '9106011234087',
+            'identity_verified' => 1,
         ]);
     }
 }

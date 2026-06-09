@@ -70,6 +70,18 @@ h6,
     z-index: 2;
 }
 
+.auth-card {
+    width: min(100%, 28rem);
+    margin-inline: auto;
+}
+
+@media (max-width: 575.98px) {
+    .auth-card {
+        width: calc(100vw - 2rem);
+        max-width: 32rem;
+    }
+}
+
 .text-dark,
 .text-gray-900,
 .text-gray-800,
@@ -154,6 +166,45 @@ h6,
     padding: 0.75rem 1rem;
     border-radius: 999px;
     text-transform: uppercase;
+}
+
+.ak-role-pill {
+    font-family: var(--ak-font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+}
+
+.ak-role-pill--superadmin {
+    background-color: rgba(32, 33, 36, 0.12);
+    color: #202124;
+}
+
+.ak-role-pill--candidate {
+    background-color: rgba(21, 179, 146, 0.14);
+    color: #0f766e;
+}
+
+.ak-role-pill--recruitment {
+    background-color: rgba(231, 101, 5, 0.14);
+    color: #b45309;
+}
+
+.ak-role-pill--procurement {
+    background-color: rgba(37, 99, 235, 0.14);
+    color: #1d4ed8;
+}
+
+.ak-role-pill--client {
+    background-color: rgba(168, 85, 247, 0.14);
+    color: #7e22ce;
+}
+
+.ak-role-pill--default {
+    background-color: rgba(107, 114, 128, 0.14);
+    color: #4b5563;
 }
 
 .aside-logout .menu-link {

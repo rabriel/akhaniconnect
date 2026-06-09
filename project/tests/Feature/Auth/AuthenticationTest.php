@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -183,5 +184,50 @@ class AuthenticationTest extends TestCase
 
         $this->assertStringContainsString('logo.png', $rendered);
         $this->assertStringContainsString('Welcome to Akhani Connect', $rendered);
+    }
+
+    public function test_candidate_sa_id_verification_updates_profile_identity_fields(): void
+    {
+        $this->seed();
+        Http::fake([
+            '*' => Http::response([
+                'success' => true,
+                'requestId' => 'said-ref-123',
+                'reportType' => 'said_verification',
+                'mode' => 'sandbox',
+                'results' => [
+                    'said_verification' => [
+                        'transaction_id' => 'txn-1',
+                        'realTimeResults' => [
+                            'Status' => 'ID Number Valid',
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $candidate = User::factory()->withRole(2)->create();
+        $candidate->profile()->create(['country' => 'ZA']);
+        $candidate->candidateProfile()->create();
+
+        $response = $this->actingAs($candidate)->post(route('candidate.identity-verification.store'), [
+            'id_number' => '9106011234087',
+        ]);
+
+        $response->assertRedirect(route('candidate.identity-verification.show'));
+        $response->assertSessionHas('status');
+
+        $this->assertDatabaseHas('verification_records', [
+            'user_id' => $candidate->id,
+            'module' => 'sa_identity',
+            'status' => 'verified',
+            'provider_reference' => 'said-ref-123',
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $candidate->id,
+            'id_number' => '9106011234087',
+            'identity_verified' => 1,
+        ]);
     }
 }

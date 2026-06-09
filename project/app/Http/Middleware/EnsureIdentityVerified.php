@@ -19,6 +19,10 @@ class EnsureIdentityVerified
             abort(403);
         }
 
+        if (! $user->hasRole('candidate') && ! $user->hasRole('procurement')) {
+            return $next($request);
+        }
+
         if ($user->hasVerifiedIdentity()) {
             return $next($request);
         }
@@ -35,6 +39,6 @@ class EnsureIdentityVerified
 
         return redirect()
             ->route($route)
-            ->with('status', 'Please complete SA ID verification before accessing your dashboard.');
+            ->with('error', 'You need to verify your ID to proceed.');
     }
 }

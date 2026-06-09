@@ -32,11 +32,26 @@
                     </thead>
                     <tbody class="text-gray-600 fw-semibold">
                         @forelse ($users as $user)
+                            @php
+                                $roleSlug = $user->role?->slug;
+                                $roleBadgeClass = match ($roleSlug) {
+                                    'superadmin' => 'ak-role-pill--superadmin',
+                                    'candidate' => 'ak-role-pill--candidate',
+                                    'recruitment' => 'ak-role-pill--recruitment',
+                                    'procurement' => 'ak-role-pill--procurement',
+                                    'client' => 'ak-role-pill--client',
+                                    default => 'ak-role-pill--default',
+                                };
+                            @endphp
                             <tr>
                                 <td>{{ $user->full_name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone }}</td>
-                                <td>{{ $user->role?->name ?? 'Unassigned' }}</td>
+                                <td>
+                                    <span class="badge ak-role-pill {{ $roleBadgeClass }}">
+                                        {{ $user->role?->name ?? 'Unassigned' }}
+                                    </span>
+                                </td>
                                 <td>
                                     <span class="badge badge-light-{{ $user->status === 'active' ? 'success' : 'secondary' }}">
                                         {{ ucfirst($user->status) }}

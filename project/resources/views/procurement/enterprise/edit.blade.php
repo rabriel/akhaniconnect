@@ -5,144 +5,193 @@
 ])
 
 @section('content')
+    @php
+        $procurementProfile = auth()->user()->procurementProfile;
+        $enterpriseData = $procurementProfile?->enterprise_data ?? [];
+        $enterpriseRecordStatus = $record?->status ? ucfirst($record->status) : ($procurementProfile?->registration_number ? 'Awaiting verification' : 'Pending');
+    @endphp
+
+    <div class="d-flex justify-content-end mb-6">
+        <a href="{{ route('procurement.enterprise.report') }}" class="btn btn-primary">Download PDF</a>
+    </div>
+
     <div class="card mb-8">
         <div class="card-body">
             <div class="mb-8">
                 <h3 class="mb-3">CIPC Enterprise</h3>
-                <p class="text-gray-600 mb-0">Hi {{ auth()->user()->full_name }}, enter the company registration number below. Enterprise fields are pulled from the API and can only be refreshed by verification.</p>
+                <p class="text-gray-600 mb-0">Hi {{ auth()->user()->full_name }}, enter the company registration number below and run verification. All enterprise fields are pulled from the API and cannot be edited manually.</p>
             </div>
 
-            <form method="POST" action="{{ route('procurement.enterprise.update') }}">
+            @if ($record?->status === 'failed' && filled($record->last_error))
+                <div class="alert alert-light-danger border border-danger border-opacity-25 mb-8">
+                    <div class="fw-semibold mb-1">Latest verification failed</div>
+                    <div class="text-muted">{{ $record->last_error }}</div>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('procurement.enterprise.verify') }}">
                 @csrf
-                @method('PUT')
 
-                <div class="row mb-6">
-                    <div class="col-lg-6 fv-row">
+                <div class="d-flex flex-column flex-lg-row align-items-lg-end gap-3">
+                    <div class="fv-row mb-0 flex-lg-grow-1">
                         <label class="form-label fs-6 fw-bold mb-3">Registration number</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" name="registration_number" value="{{ old('registration_number', auth()->user()->procurementProfile?->registration_number) }}" required>
+                        <input
+                            class="form-control form-control-lg form-control-solid"
+                            type="text"
+                            name="registration_number"
+                            value="{{ old('registration_number', $procurementProfile?->registration_number) }}"
+                            placeholder="Enter company registration number"
+                            required
+                        >
                     </div>
-                    <div class="col-lg-6 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">Company name</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->procurementProfile?->company_name }}" disabled>
-                    </div>
-                </div>
-
-                <div class="row mb-6">
-                    <div class="col-lg-6 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">VAT number</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->procurementProfile?->vat_number }}" disabled>
-                    </div>
-                    <div class="col-lg-6 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">Company phone</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->procurementProfile?->company_phone }}" disabled>
+                    <div class="fv-row mb-0 flex-shrink-0">
+                        <button type="submit" class="btn btn-primary w-100 w-lg-auto">
+                            {{ $record?->status === 'verified' ? 'Re-verify Enterprise' : 'Verify Enterprise' }}
+                        </button>
                     </div>
                 </div>
 
-                <div class="row mb-6">
-                    <div class="col-lg-6 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">Enterprise status</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->procurementProfile?->enterprise_status }}" disabled>
-                    </div>
-                    <div class="col-lg-6 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">Enterprise type</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->procurementProfile?->enterprise_type }}" disabled>
-                    </div>
-                </div>
-
-                <div class="row mb-6">
-                    <div class="col-lg-12 fv-row">
-                        <label class="form-label fs-6 fw-bold mb-3">Registered address</label>
-                        <textarea class="form-control form-control-lg form-control-solid" rows="3" disabled>{{ auth()->user()->procurementProfile?->enterprise_address }}</textarea>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Save Registration Number</button>
-                </div>
+                <div class="form-text mt-3">Format example: <strong>2014/081962/07</strong> or digits only like <strong>201408196207</strong>.</div>
+                <div class="form-text mt-2">This is the only field you can enter manually. Company details below are populated from the CIPC API.</div>
             </form>
         </div>
     </div>
 
     <div class="card mb-8">
-        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-            <div>
-                <h3 class="mb-2">Run CIPC Company Match</h3>
-                <p class="text-gray-600 mb-0">Verify the saved registration number to pull the latest enterprise details from the API and refresh your stored company data.</p>
-            </div>
-            <div class="mt-5 mt-md-0">
-                <form method="POST" action="{{ route('procurement.enterprise.verify') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-light-primary">{{ $record?->status === 'verified' ? 'Re-verify Enterprise' : 'Verify Enterprise' }}</button>
-                </form>
+        <div class="card-body py-8">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-6">
+                <div>
+                    <div class="fs-2hx fw-bold">{{ $procurementProfile?->company_name ?: 'Enterprise Record' }}</div>
+                    <div class="text-muted mt-2">
+                        {{ $procurementProfile?->registration_number ?: 'Registration number not saved' }}
+                        @if ($procurementProfile?->enterprise_type)
+                            | {{ $procurementProfile->enterprise_type }}
+                        @endif
+                        @if ($procurementProfile?->vat_number)
+                            | VAT {{ $procurementProfile->vat_number }}
+                        @endif
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <span class="badge badge-light-{{ $record?->status === 'verified' ? 'success' : ($record?->status === 'failed' ? 'danger' : ($procurementProfile?->registration_number ? 'warning' : 'secondary')) }} fs-7 px-4 py-3">
+                        {{ $enterpriseRecordStatus }}
+                    </span>
+                    <span class="badge badge-light-primary fs-7 px-4 py-3">
+                        {{ $procurementProfile?->enterprise_status ?: 'Status pending' }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header border-0 pt-6">
-            <div class="card-title">
-                <h2>Your Saved CIPC Enterprise</h2>
-            </div>
-        </div>
-        <div class="card-body pt-0">
-            <div class="table-responsive">
-                <table class="table align-middle table-row-dashed fs-6 gy-5">
-                    <thead>
-                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                            <th>Registration #</th>
-                            <th>Company Name</th>
-                            <th>VAT #</th>
-                            <th>Company Phone</th>
-                            <th>Enterprise Status</th>
-                            <th>Status</th>
-                            <th>Verification Ref</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 fw-semibold">
-                        <tr>
-                            <td>{{ auth()->user()->procurementProfile?->registration_number ?: 'Not saved' }}</td>
-                            <td>{{ auth()->user()->procurementProfile?->company_name ?: 'Not synced yet' }}</td>
-                            <td>{{ auth()->user()->procurementProfile?->vat_number ?: 'Not synced yet' }}</td>
-                            <td>{{ auth()->user()->procurementProfile?->company_phone ?: 'Not synced yet' }}</td>
-                            <td>{{ auth()->user()->procurementProfile?->enterprise_status ?: 'Not synced yet' }}</td>
-                            <td>
-                                <span class="badge badge-light-{{ $record?->status === 'verified' ? 'success' : ($record?->status === 'failed' ? 'danger' : (auth()->user()->procurementProfile?->registration_number ? 'warning' : 'secondary')) }}">
-                                    {{ $record?->status ? ucfirst($record->status) : (auth()->user()->procurementProfile?->registration_number ? 'Saved' : 'Pending') }}
-                                </span>
-                            </td>
-                            <td>{{ $record?->provider_reference ?? 'N/A' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            @if ($record?->summary)
-                <div class="mt-8">
-                    <h4 class="mb-3">Latest Verification Summary</h4>
-                    <div class="row g-5">
-                        <div class="col-md-4">
+    <div class="accordion accordion-icon-toggle" id="enterprise_profile_accordion">
+        <div class="accordion-item mb-5">
+            <h2 class="accordion-header" id="enterprise_overview_heading">
+                <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#enterprise_overview_body" aria-expanded="true" aria-controls="enterprise_overview_body">
+                    Enterprise Overview
+                </button>
+            </h2>
+            <div id="enterprise_overview_body" class="accordion-collapse collapse show" aria-labelledby="enterprise_overview_heading" data-bs-parent="#enterprise_profile_accordion">
+                <div class="accordion-body">
+                    <div class="row g-6">
+                        <div class="col-lg-4">
                             <div class="text-muted fs-7">Company Name</div>
-                            <div class="fw-bold">{{ $record->summary['company_name'] ?? 'N/A' }}</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->company_name ?: 'N/A' }}</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-6">
                             <div class="text-muted fs-7">Registration Number</div>
-                            <div class="fw-bold">{{ $record->summary['registration_number'] ?? 'N/A' }}</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->registration_number ?: 'N/A' }}</div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-muted fs-7">CIPC Status</div>
-                            <div class="fw-bold">{{ $record->summary['status'] ?? 'N/A' }}</div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="text-muted fs-7">VAT Number</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->vat_number ?: 'N/A' }}</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-6">
                             <div class="text-muted fs-7">Enterprise Type</div>
-                            <div class="fw-bold">{{ $record->summary['enterprise_type'] ?? 'N/A' }}</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_type ?: 'N/A' }}</div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="text-muted fs-7">Registered Address</div>
-                            <div class="fw-bold">{{ $record->summary['enterprise_address'] ?? 'N/A' }}</div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="text-muted fs-7">Enterprise Status</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_status ?: 'N/A' }}</div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="text-muted fs-7">Last Synced</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_synced_at?->format('Y-m-d H:i') ?: 'N/A' }}</div>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
+
+        <div class="accordion-item mb-5">
+            <h2 class="accordion-header" id="enterprise_contact_heading">
+                <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#enterprise_contact_body" aria-expanded="false" aria-controls="enterprise_contact_body">
+                    Contact And Address
+                </button>
+            </h2>
+            <div id="enterprise_contact_body" class="accordion-collapse collapse" aria-labelledby="enterprise_contact_heading" data-bs-parent="#enterprise_profile_accordion">
+                <div class="accordion-body">
+                    <div class="row g-6">
+                        <div class="col-md-4">
+                            <div class="text-muted fs-7">Company Phone</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->company_phone ?: 'N/A' }}</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="text-muted fs-7">Registered Address</div>
+                            <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_address ?: 'N/A' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item mb-5">
+            <h2 class="accordion-header" id="enterprise_verification_heading">
+                <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#enterprise_verification_body" aria-expanded="false" aria-controls="enterprise_verification_body">
+                    Verification Details
+                </button>
+            </h2>
+            <div id="enterprise_verification_body" class="accordion-collapse collapse" aria-labelledby="enterprise_verification_heading" data-bs-parent="#enterprise_profile_accordion">
+                <div class="accordion-body">
+                    <div class="row g-6">
+                        <div class="col-md-4">
+                            <div class="text-muted fs-7">Verification Status</div>
+                            <div class="fw-bold fs-5">{{ $record?->summary['status'] ?? $procurementProfile?->enterprise_status ?? 'N/A' }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-muted fs-7">Reference</div>
+                            <div class="fw-bold fs-5 text-break">{{ $record?->provider_reference ?: 'N/A' }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-muted fs-7">Transaction ID</div>
+                            <div class="fw-bold fs-5 text-break">{{ $record?->summary['transaction_id'] ?? 'N/A' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if ($enterpriseData !== [])
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="enterprise_api_heading">
+                    <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#enterprise_api_body" aria-expanded="false" aria-controls="enterprise_api_body">
+                        Additional Enterprise Data
+                    </button>
+                </h2>
+                <div id="enterprise_api_body" class="accordion-collapse collapse" aria-labelledby="enterprise_api_heading" data-bs-parent="#enterprise_profile_accordion">
+                    <div class="accordion-body">
+                        <div class="row g-6">
+                            @foreach ($enterpriseData as $label => $value)
+                                @continue(is_array($value))
+                                <div class="col-md-4">
+                                    <div class="text-muted fs-7">{{ ucwords(str_replace('_', ' ', $label)) }}</div>
+                                    <div class="fw-bold fs-5">{{ filled($value) ? $value : 'N/A' }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

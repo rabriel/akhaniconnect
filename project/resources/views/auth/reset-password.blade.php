@@ -1,7 +1,7 @@
 @extends('layouts.auth', ['title' => 'Reset Password | Akhani Connect'])
 
 @section('content')
-    <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+    <div class="auth-card w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
         <form class="form w-100" method="POST" action="{{ route('password.store') }}">
             @csrf
 

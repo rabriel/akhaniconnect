@@ -19,6 +19,20 @@ class ProcurementDirector extends Model
     protected $fillable = [
         'procurement_profile_id',
         'full_name',
+        'initials',
+        'birth_date',
+        'gender',
+        'title',
+        'marital_status',
+        'privacy_status',
+        'cellular_number',
+        'home_telephone',
+        'work_telephone',
+        'email_address',
+        'residential_address',
+        'postal_address',
+        'employer',
+        'number_of_enquiries',
         'id_number',
         'position',
         'status',
@@ -35,6 +49,8 @@ class ProcurementDirector extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'birth_date' => 'date',
+        'number_of_enquiries' => 'integer',
         'verification_summary' => 'array',
         'director_data' => 'array',
         'verified_at' => 'datetime',

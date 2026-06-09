@@ -34,14 +34,16 @@ class VerificationService
 
         try {
             $response = $this->verifyNowClient->verifySouthAfricanId($idNumber);
+            $responseData = $response->json() ?? [];
+            $summary = $this->extractSouthAfricanIdSummary($responseData, $idNumber);
 
             return $this->storeResult(
                 $record,
                 $requestPayload,
-                $response->json() ?? [],
+                $responseData,
                 $response->body(),
-                $response->successful(),
-                $this->extractSouthAfricanIdSummary($response->json() ?? [])
+                $response->successful() && $this->isSouthAfricanIdVerified($summary),
+                $summary
             );
         } catch (\Throwable $exception) {
             return $this->storeFailure($record, $requestPayload, $exception->getMessage());
@@ -101,26 +103,19 @@ class VerificationService
 
         try {
             $response = $this->verifyNowClient->verifyEnterpriseDirector($director->id_number);
+            $responseData = $response->json() ?? [];
+            $summary = $this->extractEnterpriseDirectorSummary($responseData, $director);
 
             $record = $this->storeResult(
                 $record,
                 $requestPayload,
-                $response->json() ?? [],
+                $responseData,
                 $response->body(),
                 $response->successful(),
-                $this->extractEnterpriseDirectorSummary($response->json() ?? [], $director)
+                $summary
             );
 
-            $director->update([
-                'full_name' => $record->summary['director_name'] ?? $director->full_name,
-                'position' => $record->summary['position'] ?? $director->position,
-                'status' => $record->status === 'verified' ? 'verified' : 'failed',
-                'provider_reference' => $record->provider_reference,
-                'director_status' => $record->summary['status'] ?? null,
-                'verification_summary' => $record->summary,
-                'director_data' => $response->json()['results']['cipc_director_search'] ?? ($response->json()['results'] ?? null),
-                'verified_at' => now(),
-            ]);
+            $this->syncEnterpriseDirector($director, $record, $responseData);
 
             return $record;
         } catch (\Throwable $exception) {
@@ -131,6 +126,47 @@ class VerificationService
 
             return $this->storeFailure($record, $requestPayload, $exception->getMessage());
         }
+    }
+
+    /**
+     * Backfill a director from the latest successful verification attempt.
+     */
+    public function syncEnterpriseDirectorFromLatestAttempt(ProcurementDirector $director): bool
+    {
+        $record = $director->verificationRecords()
+            ->where('module', 'enterprise_director')
+            ->latest('id')
+            ->first();
+
+        if ($record === null) {
+            return false;
+        }
+
+        $attempt = $record->attempts()
+            ->where('status', 'verified')
+            ->latest('attempted_at')
+            ->latest('id')
+            ->first();
+
+        $responseData = $attempt?->processed_response;
+
+        if (! is_array($responseData) || $responseData === []) {
+            return false;
+        }
+
+        $summary = $this->extractEnterpriseDirectorSummary($responseData, $director);
+
+        $record->update([
+            'status' => 'verified',
+            'provider_reference' => $attempt->provider_reference ?? $record->provider_reference,
+            'summary' => $summary,
+            'last_error' => null,
+            'last_verified_at' => $attempt->attempted_at ?? now(),
+        ]);
+
+        $this->syncEnterpriseDirector($director, $record->fresh(), $responseData);
+
+        return true;
     }
 
     /**
@@ -256,14 +292,16 @@ class VerificationService
 
         try {
             $response = $this->verifyNowClient->verifySouthAfricanId($idNumber);
+            $responseData = $response->json() ?? [];
+            $summary = $this->extractSouthAfricanIdSummary($responseData, $idNumber);
 
             return $this->storeResult(
                 $record,
                 $payload,
-                $response->json() ?? [],
+                $responseData,
                 $response->body(),
-                $response->successful(),
-                $this->extractSouthAfricanIdSummary($response->json() ?? [])
+                $response->successful() && $this->isSouthAfricanIdVerified($summary),
+                $summary
             );
         } catch (\Throwable $exception) {
             return $this->storeFailure($record, $payload, $exception->getMessage());
@@ -315,27 +353,19 @@ class VerificationService
 
         try {
             $response = $this->verifyNowClient->verifyEnterpriseDirector($idNumber);
+            $responseData = $response->json() ?? [];
 
             $record = $this->storeResult(
                 $record,
                 $payload,
-                $response->json() ?? [],
+                $responseData,
                 $response->body(),
                 $response->successful(),
-                $this->extractEnterpriseDirectorSummary($response->json() ?? [], null, $payload)
+                $this->extractEnterpriseDirectorSummary($responseData, null, $payload)
             );
 
             if ($record->verifiable instanceof ProcurementDirector) {
-                $record->verifiable->update([
-                    'full_name' => $record->summary['director_name'] ?? $record->verifiable->full_name,
-                    'position' => $record->summary['position'] ?? $record->verifiable->position,
-                    'status' => $record->status === 'verified' ? 'verified' : 'failed',
-                    'provider_reference' => $record->provider_reference,
-                    'director_status' => $record->summary['status'] ?? null,
-                    'verification_summary' => $record->summary,
-                    'director_data' => $response->json()['results']['cipc_director_search'] ?? ($response->json()['results'] ?? null),
-                    'verified_at' => now(),
-                ]);
+                $this->syncEnterpriseDirector($record->verifiable, $record, $responseData);
             }
 
             return $record;
@@ -434,7 +464,7 @@ class VerificationService
                 'status' => $status,
                 'provider_reference' => $providerReference,
                 'summary' => $summary,
-                'last_error' => $successful ? null : ($jsonResponse['error'] ?? 'Verification failed'),
+                'last_error' => $successful ? null : $this->extractFailureMessage($jsonResponse),
                 'last_verified_at' => now(),
             ]);
 
@@ -444,9 +474,13 @@ class VerificationService
                 'request_payload' => $requestPayload,
                 'raw_response' => $rawResponse,
                 'processed_response' => $jsonResponse,
-                'error_message' => $successful ? null : ($jsonResponse['error'] ?? 'Verification failed'),
+                'error_message' => $successful ? null : $this->extractFailureMessage($jsonResponse),
                 'attempted_at' => now(),
             ]);
+
+            if ($record->module === 'sa_identity' && $status === 'verified') {
+                $this->syncVerifiedIdentityProfile($record, $summary);
+            }
 
             return $record->fresh(['attempts', 'verifiable']);
         });
@@ -478,6 +512,20 @@ class VerificationService
     }
 
     /**
+     * Build a readable failure message from a provider response.
+     *
+     * @param  array<string, mixed>  $response
+     */
+    protected function extractFailureMessage(array $response): string
+    {
+        return (string) (
+            $response['message']
+            ?? $response['error']
+            ?? 'Verification failed'
+        );
+    }
+
+    /**
      * Extract a display summary for driver licence verification.
      *
      * @param  array<string, mixed>  $response
@@ -499,7 +547,7 @@ class VerificationService
      * @param  array<string, mixed>  $response
      * @return array<string, mixed>
      */
-    protected function extractSouthAfricanIdSummary(array $response): array
+    protected function extractSouthAfricanIdSummary(array $response, string $idNumber): array
     {
         return [
             'request_id' => $response['requestId'] ?? null,
@@ -508,7 +556,50 @@ class VerificationService
             'report_type' => $response['reportType'] ?? 'said_verification',
             'transaction_id' => Arr::get($response, 'results.said_verification.transaction_id'),
             'status' => Arr::get($response, 'results.said_verification.realTimeResults.Status'),
+            'id_number' => Arr::get($response, 'results.said_verification.id_number')
+                ?? Arr::get($response, 'results.said_verification.idNumber')
+                ?? $idNumber,
         ];
+    }
+
+    /**
+     * Determine whether the South African ID verification passed.
+     *
+     * @param  array<string, mixed>  $summary
+     */
+    protected function isSouthAfricanIdVerified(array $summary): bool
+    {
+        return in_array(
+            strtolower((string) ($summary['status'] ?? '')),
+            ['id number valid', 'verified', 'success'],
+            true
+        );
+    }
+
+    /**
+     * Sync a verified SA ID to the shared profile record.
+     *
+     * @param  array<string, mixed>  $summary
+     */
+    protected function syncVerifiedIdentityProfile(VerificationRecord $record, array $summary): void
+    {
+        $idNumber = $summary['id_number'] ?? null;
+
+        if (! filled($idNumber)) {
+            return;
+        }
+
+        $record->user()->firstOrFail()
+            ->profile()
+            ->updateOrCreate(
+                ['user_id' => $record->user_id],
+                [
+                    'id_number' => $idNumber,
+                    'country' => 'ZA',
+                    'identity_verified' => true,
+                    'identity_verified_at' => now(),
+                ]
+            );
     }
 
     /**
@@ -526,7 +617,7 @@ class VerificationService
             'success' => $response['success'] ?? false,
             'mode' => $response['mode'] ?? config('verifynow.mode', 'sandbox'),
             'transaction_id' => $result['transaction_id'] ?? null,
-            'status' => $result['Status'] ?? $result['status'] ?? null,
+            'status' => $result['Status'] ?? $result['status'] ?? (($response['success'] ?? false) ? 'Success' : null),
             'company_name' => $result['company_name'] ?? $result['enterprise_name'] ?? null,
             'registration_number' => $result['registration_number'] ?? null,
             'vat_number' => $result['vat_number'] ?? $result['vat'] ?? null,
@@ -570,7 +661,7 @@ class VerificationService
         ?ProcurementDirector $director = null,
         array $payload = []
     ): array {
-        $result = Arr::get($response, 'results.cipc_director_search', Arr::get($response, 'results', []));
+        $result = $this->extractEnterpriseDirectorResult($response);
 
         return [
             'request_id' => $response['requestId'] ?? null,
@@ -581,10 +672,83 @@ class VerificationService
             'director_name' => $result['director_name'] ?? $result['full_name'] ?? $director?->full_name ?? 'Pending verification',
             'id_number' => $director?->id_number ?? ($payload['id_number'] ?? null),
             'position' => $result['position'] ?? $result['director_position'] ?? null,
+            'initials' => $result['initials'] ?? null,
+            'birth_date' => $result['birth_date'] ?? null,
+            'gender' => $result['gender'] ?? null,
+            'title' => $result['title'] ?? null,
+            'marital_status' => $result['marital_status'] ?? null,
+            'privacy_status' => $result['privacy_status'] ?? null,
+            'cellular_number' => $result['cellular_number'] ?? null,
+            'home_telephone' => $result['home_telephone'] ?? null,
+            'work_telephone' => $result['work_telephone'] ?? null,
+            'email_address' => $result['email_address'] ?? null,
+            'residential_address' => $result['residential_address'] ?? null,
+            'postal_address' => $result['postal_address'] ?? null,
+            'employer' => $result['employer'] ?? null,
+            'number_of_enquiries' => $result['number_of_enquiries'] ?? null,
             'companies_count' => is_countable($result['companies'] ?? $result['director_companies'] ?? null)
                 ? count($result['companies'] ?? $result['director_companies'])
                 : null,
         ];
+    }
+
+    /**
+     * Extract the normalized enterprise director payload from a provider response.
+     *
+     * @param  array<string, mixed>  $response
+     * @return array<string, mixed>
+     */
+    protected function extractEnterpriseDirectorResult(array $response): array
+    {
+        $result = Arr::get($response, 'results.cipc_director_search');
+
+        if (is_array($result)) {
+            return array_merge($response, $result);
+        }
+
+        $results = Arr::get($response, 'results', []);
+
+        return is_array($results)
+            ? array_merge($response, $results)
+            : $response;
+    }
+
+    /**
+     * Persist director verification data to the procurement director record.
+     *
+     * @param  array<string, mixed>  $response
+     */
+    protected function syncEnterpriseDirector(
+        ProcurementDirector $director,
+        VerificationRecord $record,
+        array $response
+    ): void {
+        $data = $this->extractEnterpriseDirectorResult($response);
+
+        $director->update([
+            'full_name' => $data['full_name'] ?? $data['director_name'] ?? $director->full_name,
+            'initials' => $data['initials'] ?? null,
+            'birth_date' => $data['birth_date'] ?? null,
+            'gender' => $data['gender'] ?? null,
+            'title' => $data['title'] ?? null,
+            'marital_status' => $data['marital_status'] ?? null,
+            'privacy_status' => $data['privacy_status'] ?? null,
+            'cellular_number' => $data['cellular_number'] ?? null,
+            'home_telephone' => $data['home_telephone'] ?? null,
+            'work_telephone' => $data['work_telephone'] ?? null,
+            'email_address' => $data['email_address'] ?? null,
+            'residential_address' => $data['residential_address'] ?? null,
+            'postal_address' => $data['postal_address'] ?? null,
+            'employer' => $data['employer'] ?? null,
+            'number_of_enquiries' => isset($data['number_of_enquiries']) ? (int) $data['number_of_enquiries'] : null,
+            'position' => $data['position'] ?? $data['director_position'] ?? $director->position,
+            'status' => $record->status === 'verified' ? 'verified' : 'failed',
+            'provider_reference' => $record->provider_reference,
+            'director_status' => $data['Status'] ?? $data['status'] ?? (($response['success'] ?? false) ? 'Success' : null),
+            'verification_summary' => $record->summary,
+            'director_data' => $response,
+            'verified_at' => now(),
+        ]);
     }
 
     /**

@@ -30,9 +30,9 @@
                         </a>
                     </div>
 
-                    <div class="aside-nav d-flex flex-column align-lg-center flex-column-fluid w-100 pt-5 pt-lg-0" id="kt_aside_nav">
+                    <div class="aside-nav d-flex flex-column flex-column-fluid w-100 pt-5 pt-lg-0" id="kt_aside_nav">
                         <div id="kt_aside_menu"
-                             class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-6 flex-column-fluid"
+                             class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-6 flex-column-fluid align-items-center"
                              data-kt-menu="true">
                             <div class="menu-item py-3">
                                 <a class="menu-link menu-center {{ request()->routeIs('*.dashboard') || request()->routeIs('dashboard') ? 'active' : '' }}"

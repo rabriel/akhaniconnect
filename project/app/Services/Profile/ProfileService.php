@@ -29,7 +29,9 @@ class ProfileService
                 [
                     'date_of_birth' => $data['date_of_birth'] ?? null,
                     'gender' => $data['gender'] ?? null,
-                    'id_number' => $data['id_number'] ?? null,
+                    'id_number' => $user->hasVerifiedIdentity()
+                        ? $user->profile?->id_number
+                        : ($data['id_number'] ?? null),
                     'passport_number' => $data['passport_number'] ?? null,
                     'phone_secondary' => $data['phone_secondary'] ?? null,
                     'avatar_path' => $this->storeAvatar($user, $data['profile_picture'] ?? null),
@@ -40,6 +42,8 @@ class ProfileService
                     'province' => $data['province'] ?? null,
                     'postal_code' => $data['postal_code'] ?? null,
                     'country' => 'ZA',
+                    'identity_verified' => $user->profile?->identity_verified ?? false,
+                    'identity_verified_at' => $user->profile?->identity_verified_at,
                 ]
             );
 

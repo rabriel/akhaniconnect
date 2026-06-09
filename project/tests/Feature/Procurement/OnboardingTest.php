@@ -19,7 +19,12 @@ class OnboardingTest extends TestCase
         $this->seed();
 
         $user = User::factory()->withRole(4)->create();
-        $user->profile()->create(['country' => 'ZA']);
+        $user->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '9106011234087',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
         $user->procurementProfile()->create();
         $user->verificationRecords()->create([
             'module' => 'sa_identity',
@@ -81,8 +86,18 @@ class OnboardingTest extends TestCase
             'email' => 'procurement-onboarding@test.local',
             'phone' => '0825550001',
         ]);
-        $user->profile()->create(['country' => 'ZA']);
+        $user->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '9106011234087',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
         $user->procurementProfile()->create();
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->put(route('procurement.profile.update'), [
             'first_name' => 'Gabriel',
@@ -162,6 +177,11 @@ class OnboardingTest extends TestCase
         $user = User::factory()->withRole(4)->create();
         $user->profile()->create(['country' => 'ZA']);
         $user->procurementProfile()->create();
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->post(route('procurement.directors.store'), [
             'id_number' => '8201011234080',
@@ -185,6 +205,11 @@ class OnboardingTest extends TestCase
         $user = User::factory()->withRole(4)->create();
         $user->profile()->create(['country' => 'ZA']);
         $user->procurementProfile()->create();
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->post(route('procurement.documents.proof-of-address.store'), [
             'document' => UploadedFile::fake()->create('proof-of-address.pdf', 400, 'application/pdf'),
@@ -340,6 +365,21 @@ class OnboardingTest extends TestCase
         ]);
 
         $user = User::factory()->withRole(4)->create();
+        $user->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '9001011234088',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
+        $user->procurementProfile()->create([
+            'company_name' => 'Retry Company',
+            'registration_number' => '201408196207',
+        ]);
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
         $record = $user->verificationRecords()->create([
             'module' => 'bank_account',
             'provider' => 'verifynow',
@@ -385,6 +425,40 @@ class OnboardingTest extends TestCase
             ->assertRedirect(route('procurement.identity-verification.show'));
     }
 
+    public function test_unverified_procurement_user_cannot_access_procurement_actions(): void
+    {
+        $this->seed();
+
+        $user = User::factory()->withRole(4)->create([
+            'email' => 'procurement-lockout@test.local',
+            'phone' => '0827771111',
+        ]);
+        $user->profile()->create(['country' => 'ZA']);
+        $user->procurementProfile()->create();
+
+        $this->actingAs($user)
+            ->get(route('procurement.profile.edit'))
+            ->assertRedirect(route('procurement.identity-verification.show'));
+
+        $updateResponse = $this->actingAs($user)->put(route('procurement.profile.update'), [
+            'first_name' => 'Locked',
+            'surname' => 'Procurement',
+            'email' => 'procurement-lockout@test.local',
+            'phone' => '0827771111',
+            'date_of_birth' => '1991-06-01',
+            'gender' => 'Male',
+            'id_number' => '9106011234087',
+            'address_line_1' => '14 Oak Avenue',
+            'suburb' => 'Sandton',
+            'city' => 'Johannesburg',
+            'province' => 'Gauteng',
+            'postal_code' => '2196',
+        ]);
+
+        $updateResponse->assertRedirect(route('procurement.identity-verification.show'));
+        $updateResponse->assertSessionHas('error', 'You need to verify your ID to proceed.');
+    }
+
     public function test_procurement_user_can_submit_sa_id_verification(): void
     {
         $this->seed();
@@ -421,6 +495,12 @@ class OnboardingTest extends TestCase
             'module' => 'sa_identity',
             'status' => 'verified',
             'provider_reference' => 'said-ref-999',
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $user->id,
+            'id_number' => '9106011234087',
+            'identity_verified' => 1,
         ]);
     }
 
@@ -480,6 +560,10 @@ class OnboardingTest extends TestCase
             'enterprise_type' => 'Private Company',
             'enterprise_address' => '1 Main Road, Sandton, Johannesburg',
         ]);
+
+        $reportResponse = $this->actingAs($user)->get(route('procurement.enterprise.report'));
+        $reportResponse->assertOk();
+        $reportResponse->assertHeader('content-type', 'application/pdf');
     }
 
     public function test_procurement_user_can_submit_enterprise_director_verification(): void
@@ -501,6 +585,22 @@ class OnboardingTest extends TestCase
                         ],
                     ],
                 ],
+                'full_name' => 'Nomsa Dlamini',
+                'id_number' => '8905155324082',
+                'initials' => 'ND',
+                'birth_date' => '1980-01-01',
+                'gender' => 'Female',
+                'title' => 'Ms',
+                'marital_status' => 'Single',
+                'privacy_status' => 'ACCEPTS CONTRACTS',
+                'cellular_number' => '0825550100',
+                'home_telephone' => '0115550100',
+                'work_telephone' => '0115550101',
+                'email_address' => 'nomsa@example.co.za',
+                'residential_address' => '1 Example Street, Johannesburg, 2000',
+                'postal_address' => 'PO Box 123, Johannesburg, 2000',
+                'employer' => 'EXAMPLE COMPANY PTY LTD',
+                'number_of_enquiries' => '2',
             ], 200),
         ]);
 
@@ -538,10 +638,30 @@ class OnboardingTest extends TestCase
         $this->assertDatabaseHas('procurement_directors', [
             'id' => $director->id,
             'full_name' => 'Nomsa Dlamini',
+            'initials' => 'ND',
+            'gender' => 'Female',
+            'email_address' => 'nomsa@example.co.za',
+            'employer' => 'EXAMPLE COMPANY PTY LTD',
+            'number_of_enquiries' => 2,
             'position' => 'Director',
             'status' => 'verified',
             'director_status' => 'Success',
             'provider_reference' => 'director-ref-321',
         ]);
+
+        $this->assertDatabaseHas('procurement_directors', [
+            'id' => $director->id,
+            'residential_address' => '1 Example Street, Johannesburg, 2000',
+            'postal_address' => 'PO Box 123, Johannesburg, 2000',
+        ]);
+
+        $viewResponse = $this->actingAs($user)->get(route('procurement.directors.show', $director));
+        $viewResponse->assertOk();
+        $viewResponse->assertSee('Nomsa Dlamini');
+        $viewResponse->assertSee('nomsa@example.co.za');
+
+        $reportResponse = $this->actingAs($user)->get(route('procurement.directors.report', $director));
+        $reportResponse->assertOk();
+        $reportResponse->assertHeader('content-type', 'application/pdf');
     }
 }

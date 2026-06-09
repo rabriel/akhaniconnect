@@ -28,7 +28,9 @@ class ProcurementOnboardingService
                 [
                     'date_of_birth' => $data['date_of_birth'] ?? null,
                     'gender' => $data['gender'] ?? null,
-                    'id_number' => $data['id_number'] ?? null,
+                    'id_number' => $user->hasVerifiedIdentity()
+                        ? $user->profile?->id_number
+                        : ($data['id_number'] ?? null),
                     'passport_number' => $data['passport_number'] ?? null,
                     'address_line_1' => $data['address_line_1'] ?? null,
                     'address_line_2' => $data['address_line_2'] ?? null,
@@ -37,6 +39,8 @@ class ProcurementOnboardingService
                     'province' => $data['province'] ?? null,
                     'postal_code' => $data['postal_code'] ?? null,
                     'country' => 'ZA',
+                    'identity_verified' => $user->profile?->identity_verified ?? false,
+                    'identity_verified_at' => $user->profile?->identity_verified_at,
                     'profile_completed' => $this->isPersonalSectionComplete($data),
                 ]
             );

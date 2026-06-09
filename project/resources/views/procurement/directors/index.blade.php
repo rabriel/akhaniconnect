@@ -69,10 +69,13 @@
                                 <td>{{ $director->provider_reference ?: 'N/A' }}</td>
                                 <td>{{ $director->created_at?->format('Y-m-d H:i') }}</td>
                                 <td class="text-end">
-                                    <form method="POST" action="{{ route('procurement.directors.verify', $director) }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-light-primary">{{ $director->status === 'verified' ? 'Re-verify' : 'Verify' }}</button>
-                                    </form>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('procurement.directors.show', $director) }}" class="btn btn-sm btn-light-primary">View</a>
+                                        <form method="POST" action="{{ route('procurement.directors.verify', $director) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-light-primary">{{ $director->status === 'verified' ? 'Re-verify' : 'Verify' }}</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

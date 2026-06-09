@@ -1,7 +1,7 @@
 @extends('layouts.auth', ['title' => 'Register | Akhani Connect'])
 
 @section('content')
-    <div class="w-lg-650px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+    <div class="auth-card w-lg-650px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
         <form class="form w-100" method="POST" action="{{ route('register.store') }}">
             @csrf
 
