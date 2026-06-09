@@ -5,6 +5,12 @@
 ])
 
 @section('content')
+    @php
+        $progressTextClass = $progress === 100 ? 'text-success' : 'text-warning';
+        $progressTrackClass = $progress === 100 ? 'bg-light-success' : 'bg-light-warning';
+        $progressBarClass = $progress === 100 ? 'bg-success' : 'bg-warning';
+    @endphp
+
     <div class="card mb-8">
         <div class="card-body">
             <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between align-items-start gap-6">
@@ -19,10 +25,10 @@
 
             <div class="d-flex align-items-center mb-2">
                 <span class="fw-bold text-gray-700 me-3">Progress</span>
-                <span class="fw-bold text-warning">{{ $progress }}%</span>
+                <span class="fw-bold {{ $progressTextClass }}">{{ $progress }}%</span>
             </div>
-            <div class="progress h-10px bg-light-warning">
-                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress h-10px {{ $progressTrackClass }}">
+                <div class="progress-bar {{ $progressBarClass }}" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
         </div>
     </div>
@@ -44,7 +50,7 @@
                             <div class="fw-bold text-dark fs-5 mb-2">{{ $step['title'] }}</div>
                             <div class="text-gray-500 fs-7 mb-4">{{ $step['description'] }}</div>
                             @if ($step['route'])
-                                <a href="{{ $step['route'] }}" class="btn btn-sm btn-light-primary">Open</a>
+                                <a href="{{ $step['route'] }}" class="btn btn-sm {{ $step['status'] === 'verified' ? 'btn-light-success' : 'btn-light-primary' }}">Open</a>
                             @endif
                         </div>
                     </div>
@@ -110,47 +116,6 @@
                     </div>
                 </div>
 
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_documents">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Proof Of Address</h3>
-                    </div>
-                    <div id="summary_documents" class="collapse" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Uploaded Documents:</strong> {{ $user->documents->where('category', 'proof_of_address')->count() }}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_driver_licence">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Driver Licence</h3>
-                    </div>
-                    <div id="summary_driver_licence" class="collapse" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Status:</strong> {{ optional($user->verificationRecords->firstWhere('module', 'driver_licence'))->status ?: 'Pending' }}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_bank_account">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Bank Account Verification</h3>
-                    </div>
-                    <div id="summary_bank_account" class="collapse" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Status:</strong> {{ optional($user->verificationRecords->firstWhere('module', 'bank_account'))->status ?: 'Pending' }}</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

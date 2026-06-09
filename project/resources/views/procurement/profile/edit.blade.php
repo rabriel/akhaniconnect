@@ -54,7 +54,8 @@
                     </div>
                     <div class="col-lg-4 fv-row">
                         <label class="form-label fs-6 fw-bold mb-3">South African ID number</label>
-                        <input class="form-control form-control-lg form-control-solid" type="text" name="id_number" value="{{ old('id_number', auth()->user()->profile?->id_number) }}">
+                        <input class="form-control form-control-lg form-control-solid" type="text" value="{{ auth()->user()->profile?->id_number }}" readonly>
+                        <div class="form-text mt-2">This ID number is pulled from your verified identity record and cannot be edited here.</div>
                     </div>
                 </div>
 

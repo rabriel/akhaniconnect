@@ -129,58 +129,6 @@
                                         </span>
                                     </a>
                                 </div>
-                                <div class="menu-item py-3">
-                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.documents.proof-of-address*') ? 'active' : '' }}"
-                                       href="{{ route('procurement.documents.proof-of-address') }}"
-                                       title="Proof Of Address"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-trigger="hover"
-                                       data-bs-dismiss="click"
-                                       data-bs-placement="right">
-                                        <span class="menu-icon me-0">
-                                            <i class="bi bi-file-earmark-arrow-up fs-2"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item py-3">
-                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.verifications.driver-licence*') ? 'active' : '' }}"
-                                       href="{{ route('procurement.verifications.driver-licence') }}"
-                                       title="Driver Licence"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-trigger="hover"
-                                       data-bs-dismiss="click"
-                                       data-bs-placement="right">
-                                        <span class="menu-icon me-0">
-                                            <i class="bi bi-person-badge fs-2"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item py-3">
-                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.verifications.bank-account*') ? 'active' : '' }}"
-                                       href="{{ route('procurement.verifications.bank-account') }}"
-                                       title="Bank Account"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-trigger="hover"
-                                       data-bs-dismiss="click"
-                                       data-bs-placement="right">
-                                        <span class="menu-icon me-0">
-                                            <i class="bi bi-bank fs-2"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item py-3">
-                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.verifications.history*') || request()->routeIs('procurement.verifications.show') ? 'active' : '' }}"
-                                       href="{{ route('procurement.verifications.history') }}"
-                                       title="Verification History"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-trigger="hover"
-                                       data-bs-dismiss="click"
-                                       data-bs-placement="right">
-                                        <span class="menu-icon me-0">
-                                            <i class="bi bi-clock-history fs-2"></i>
-                                        </span>
-                                    </a>
-                                </div>
                             @endif
 
                             @if (auth()->user()->hasRole('candidate'))

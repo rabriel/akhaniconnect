@@ -13,7 +13,9 @@ class DashboardController extends Controller
      */
     public function __invoke(ProcurementOnboardingService $procurementOnboardingService): View
     {
-        $user = request()->user()->loadMissing(['profile', 'procurementProfile']);
+        $user = request()->user()->loadMissing(['profile', 'procurementProfile.directors', 'verificationRecords']);
+        $procurementOnboardingService->refreshVerificationProgress($user);
+        $user = $user->fresh(['profile', 'procurementProfile.directors', 'verificationRecords']);
         $steps = $procurementOnboardingService->getDashboardSteps($user);
         $progress = $user->procurementProfile?->verification_progress ?? 0;
 

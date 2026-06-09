@@ -154,7 +154,7 @@ class OnboardingTest extends TestCase
         $this->assertDatabaseHas('procurement_profiles', [
             'user_id' => $user->id,
             'registration_number' => '201408196207',
-            'verification_progress' => 29,
+            'verification_progress' => 50,
         ]);
     }
 

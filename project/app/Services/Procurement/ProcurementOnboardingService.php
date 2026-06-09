@@ -16,6 +16,8 @@ class ProcurementOnboardingService
     public function updatePersonalDetails(User $user, array $data): User
     {
         return DB::transaction(function () use ($user, $data): User {
+            $storedIdNumber = $user->profile?->id_number;
+
             $user->update([
                 'first_name' => $data['first_name'],
                 'surname' => $data['surname'],
@@ -28,9 +30,7 @@ class ProcurementOnboardingService
                 [
                     'date_of_birth' => $data['date_of_birth'] ?? null,
                     'gender' => $data['gender'] ?? null,
-                    'id_number' => $user->hasVerifiedIdentity()
-                        ? $user->profile?->id_number
-                        : ($data['id_number'] ?? null),
+                    'id_number' => $storedIdNumber,
                     'passport_number' => $data['passport_number'] ?? null,
                     'address_line_1' => $data['address_line_1'] ?? null,
                     'address_line_2' => $data['address_line_2'] ?? null,
@@ -41,7 +41,7 @@ class ProcurementOnboardingService
                     'country' => 'ZA',
                     'identity_verified' => $user->profile?->identity_verified ?? false,
                     'identity_verified_at' => $user->profile?->identity_verified_at,
-                    'profile_completed' => $this->isPersonalSectionComplete($data),
+                    'profile_completed' => $this->isPersonalSectionComplete($data, $storedIdNumber),
                 ]
             );
 
@@ -186,7 +186,7 @@ class ProcurementOnboardingService
                     ? 'Enterprise registration details have been verified with CIPC.'
                     : ($this->isEnterpriseComplete($procurementProfile)
                         ? 'Enterprise details are saved and ready for CIPC verification.'
-                        : 'Add company registration and enterprise contact details.'),
+                        : 'Add the company registration number and verify the enterprise details.'),
                 'route' => route('procurement.enterprise.edit'),
             ],
             [
@@ -199,30 +199,6 @@ class ProcurementOnboardingService
                         : 'Add the directors linked to the enterprise.'),
                 'route' => route('procurement.directors.index'),
             ],
-            [
-                'title' => 'Proof Of Address',
-                'status' => $this->hasProofOfAddress($user) ? 'verified' : 'pending',
-                'description' => $this->hasProofOfAddress($user)
-                    ? 'A proof of address document has been uploaded.'
-                    : 'Upload a recent proof of address document.',
-                'route' => route('procurement.documents.proof-of-address'),
-            ],
-            [
-                'title' => 'Drivers License',
-                'status' => $this->hasVerifiedModule($user, 'driver_licence') ? 'verified' : 'pending',
-                'description' => $this->hasVerifiedModule($user, 'driver_licence')
-                    ? 'Driver licence verification has been submitted and recorded.'
-                    : 'Upload and submit the driver licence for verification.',
-                'route' => route('procurement.verifications.driver-licence'),
-            ],
-            [
-                'title' => 'Bank Account Verification',
-                'status' => $this->hasVerifiedModule($user, 'bank_account') ? 'verified' : 'pending',
-                'description' => $this->hasVerifiedModule($user, 'bank_account')
-                    ? 'Bank account verification has been submitted and recorded.'
-                    : 'Submit the business bank account for verification.',
-                'route' => route('procurement.verifications.bank-account'),
-            ],
         ];
     }
 
@@ -231,19 +207,16 @@ class ProcurementOnboardingService
      */
     public function refreshVerificationProgress(User $user): void
     {
-        $user->loadMissing(['profile', 'procurementProfile.directors', 'documents', 'verificationRecords']);
+        $user->loadMissing(['profile', 'procurementProfile.directors', 'verificationRecords']);
 
         $completedSections = collect([
             $this->hasVerifiedModule($user, 'sa_identity'),
             (bool) $user->profile?->profile_completed,
             $this->hasVerifiedEnterprise($user),
             $this->hasVerifiedDirectors($user->procurementProfile),
-            $this->hasProofOfAddress($user),
-            $this->hasVerifiedModule($user, 'driver_licence'),
-            $this->hasVerifiedModule($user, 'bank_account'),
         ])->filter()->count();
 
-        $progress = (int) round(($completedSections / 7) * 100);
+        $progress = (int) round(($completedSections / 4) * 100);
 
         $user->procurementProfile()->updateOrCreate(
             ['user_id' => $user->id],
@@ -256,14 +229,14 @@ class ProcurementOnboardingService
      *
      * @param  array<string, mixed>  $data
      */
-    protected function isPersonalSectionComplete(array $data): bool
+    protected function isPersonalSectionComplete(array $data, ?string $storedIdNumber = null): bool
     {
         return collect([
             $data['first_name'] ?? null,
             $data['surname'] ?? null,
             $data['email'] ?? null,
             $data['phone'] ?? null,
-            $data['id_number'] ?? null,
+            $storedIdNumber,
         ])->every(fn ($value) => filled($value));
     }
 
@@ -309,16 +282,6 @@ class ProcurementOnboardingService
         return $procurementProfile !== null
             && $procurementProfile->directors->isNotEmpty()
             && $procurementProfile->directors->every(fn ($director) => $director->status === 'verified');
-    }
-
-    /**
-     * Determine if a proof of address has been uploaded.
-     */
-    protected function hasProofOfAddress(User $user): bool
-    {
-        return $user->documents
-            ->where('category', 'proof_of_address')
-            ->isNotEmpty();
     }
 
     /**

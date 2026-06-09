@@ -46,10 +46,8 @@
                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                             <th>ID Number</th>
                             <th>Director Name</th>
-                            <th>Position</th>
                             <th>Director Status</th>
                             <th>Status</th>
-                            <th>Reference</th>
                             <th>Saved</th>
                             <th></th>
                         </tr>
@@ -59,14 +57,14 @@
                             <tr>
                                 <td>{{ $director->id_number }}</td>
                                 <td>{{ $director->full_name ?: 'Not synced yet' }}</td>
-                                <td>{{ $director->position ?: 'Not synced yet' }}</td>
+
                                 <td>{{ $director->director_status ?: 'Not synced yet' }}</td>
                                 <td>
                                     <span class="badge badge-light-{{ $director->status === 'verified' ? 'success' : ($director->status === 'failed' ? 'danger' : 'warning') }}">
                                         {{ ucfirst($director->status) }}
                                     </span>
                                 </td>
-                                <td>{{ $director->provider_reference ?: 'N/A' }}</td>
+
                                 <td>{{ $director->created_at?->format('Y-m-d H:i') }}</td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
