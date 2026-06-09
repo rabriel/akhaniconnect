@@ -70,8 +70,8 @@ class AuthenticationTest extends TestCase
         $this->seed();
 
         $response = $this->post(route('login.store'), [
-            'email' => 'superadmin@akhaniconnect.co.za',
-            'password' => 'ChangeMe123!',
+            'email' => 'admin@akhaniconnect.co.za',
+            'password' => 'Akhaniconnect!1',
         ]);
 
         $response->assertRedirect(route('admin.dashboard'));

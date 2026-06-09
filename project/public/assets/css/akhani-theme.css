@@ -3,6 +3,8 @@
     --bs-primary-rgb: 231, 101, 5;
     --bs-dark: #202124;
     --bs-dark-rgb: 32, 33, 36;
+    --bs-link-color: #202124;
+    --bs-link-hover-color: #202124;
     --bs-font-sans-serif: "Open Sans", sans-serif;
     --ak-primary: #e76505;
     --ak-text-primary: #202124;
@@ -37,7 +39,7 @@ body {
 .auth-shell__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.8);
     pointer-events: none;
     z-index: 1;
 }
@@ -176,6 +178,35 @@ a:focus,
 a.link-primary:hover,
 .link-primary:hover {
     color: #cf5b04;
+}
+
+[style*="#000000"],
+[style*="#000000"],
+[style*="rgb(114, 57, 234)"],
+[style*="rgb(114,57,234)"] {
+    color: var(--ak-text-primary) !important;
+    border-color: var(--ak-text-primary) !important;
+}
+
+svg [fill="#000000"],
+svg [fill="#000000"],
+svg [stroke="#000000"],
+svg [stroke="#000000"] {
+    fill: var(--ak-text-primary) !important;
+    stroke: var(--ak-text-primary) !important;
+}
+
+.text-hover-primary:hover,
+.text-primary,
+.link-primary,
+.btn-active-color-primary:hover,
+.btn-active-color-primary:focus,
+.text-active-primary.active,
+.text-active-primary.show,
+.nav-link.active .text-primary,
+.page-link:focus,
+.page-link:hover {
+    color: var(--ak-text-primary) !important;
 }
 
 .form-control:focus,

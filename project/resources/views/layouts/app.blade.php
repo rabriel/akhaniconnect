@@ -26,7 +26,7 @@
                      data-kt-drawer-toggle="#kt_aside_toggle">
                     <div class="aside-logo d-none d-lg-flex flex-column align-items-center flex-column-auto py-8" id="kt_aside_logo">
                         <a href="{{ route('dashboard') }}">
-                            <img alt="Akhani Connect Logo" src="{{ asset('logo.png') }}" class="h-55px" />
+                            <img alt="Akhani Connect Logo" src="{{ asset('logo-white.png') }}" class="h-55px" />
                         </a>
                     </div>
 

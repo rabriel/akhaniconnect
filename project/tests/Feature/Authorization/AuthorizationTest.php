@@ -17,7 +17,7 @@ class AuthorizationTest extends TestCase
 
     protected function superadmin(): User
     {
-        return User::query()->where('email', 'connect@gabrielo.co.za')->firstOrFail();
+        return User::query()->where('email', 'admin@akhaniconnect.co.za')->firstOrFail();
     }
 
     public function test_authenticated_user_can_view_their_profile_page(): void
