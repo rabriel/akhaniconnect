@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charset="utf-8" />
         <link rel="shortcut icon" href="{{ asset('favicon.png') }}" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
         <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/akhani-theme.css') }}" rel="stylesheet" type="text/css" />
@@ -32,7 +32,7 @@
 
                     <div class="aside-nav d-flex flex-column align-lg-center flex-column-fluid w-100 pt-5 pt-lg-0" id="kt_aside_nav">
                         <div id="kt_aside_menu"
-                             class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-6"
+                             class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-6 flex-column-fluid"
                              data-kt-menu="true">
                             <div class="menu-item py-3">
                                 <a class="menu-link menu-center {{ request()->routeIs('*.dashboard') || request()->routeIs('dashboard') ? 'active' : '' }}"
@@ -399,6 +399,7 @@
                                 </div>
                             @endcan
                         </div>
+
                     </div>
                 </div>
 
@@ -412,7 +413,7 @@
                             </div>
 
                             <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                                <span class="text-gray-700 fw-bold fs-5">{{ auth()->user()->role->name ?? 'Account' }}</span>
+                                <span class="badge ak-role-badge">{{ auth()->user()->role->name ?? 'Account' }}</span>
                             </div>
 
                             <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
@@ -442,7 +443,10 @@
                                     <div class="d-flex align-items-center ms-3">
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-light-danger btn-sm">Logout</button>
+                                            <button type="submit" class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2">
+                                                <i class="bi bi-power"></i>
+                                                <span>Logout</span>
+                                            </button>
                                         </form>
                                     </div>
                                 </div>

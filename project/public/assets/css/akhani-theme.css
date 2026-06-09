@@ -5,15 +5,37 @@
     --bs-dark-rgb: 32, 33, 36;
     --bs-link-color: #202124;
     --bs-link-hover-color: #202124;
-    --bs-font-sans-serif: "Open Sans", sans-serif;
+    --bs-font-sans-serif: "Manrope", sans-serif;
     --ak-primary: #e76505;
     --ak-text-primary: #202124;
-    --ak-font-primary: "Open Sans", sans-serif;
+    --ak-font-primary: "Manrope", sans-serif;
+    --ak-font-heading: "Plus Jakarta Sans", sans-serif;
 }
 
 body {
     color: var(--ak-text-primary);
     font-family: var(--ak-font-primary);
+}
+
+.fs-7 {
+    font-size: 1.1rem !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.page-title h1,
+.card-title,
+.menu-title,
+.form-label,
+.fw-bolder,
+.fw-bold.fs-3,
+.fw-bold.fs-2,
+.fw-bold.fs-1 {
+    font-family: var(--ak-font-heading);
 }
 
 .auth-shell {
@@ -119,6 +141,41 @@ body {
 .bg-primary,
 .aside.bg-primary {
     background-color: var(--bs-primary) !important;
+}
+
+.ak-role-badge {
+    background-color: rgba(231, 101, 5, 0.14);
+    color: var(--ak-text-primary);
+    border: 1px solid rgba(231, 101, 5, 0.35);
+    font-family: var(--ak-font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.aside-logout .menu-link {
+    color: #ffffff !important;
+}
+
+.aside-logout .menu-link .menu-icon {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.aside-logout .menu-link .menu-icon i {
+    color: #ffffff !important;
+}
+
+.aside-logout .menu-link:hover .menu-icon,
+.aside-logout .menu-link:focus .menu-icon {
+    background-color: #ffffff !important;
+}
+
+.aside-logout .menu-link:hover .menu-icon i,
+.aside-logout .menu-link:focus .menu-icon i {
+    color: var(--ak-text-primary) !important;
 }
 
 .aside .menu > .menu-item > .menu-link.active .menu-icon,
