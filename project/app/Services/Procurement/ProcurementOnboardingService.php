@@ -199,6 +199,15 @@ class ProcurementOnboardingService
                         : 'Add the directors linked to the enterprise.'),
                 'route' => route('procurement.directors.index'),
             ],
+            [
+                'title' => 'Documents Upload',
+                'status' => $this->hasSupportingDocuments($user) ? 'verified' : 'pending',
+                'description' => $this->hasSupportingDocuments($user)
+                    ? 'Supporting documents are available for procurement and client review.'
+                    : 'Upload supporting documents such as certificates, tax clearance, and related files.',
+                'route' => route('procurement.documents.index'),
+                'exclude_from_progress' => true,
+            ],
         ];
     }
 
@@ -292,6 +301,16 @@ class ProcurementOnboardingService
         return $user->verificationRecords
             ->where('module', $module)
             ->where('status', 'verified')
+            ->isNotEmpty();
+    }
+
+    /**
+     * Determine if supporting procurement documents have been uploaded.
+     */
+    protected function hasSupportingDocuments(User $user): bool
+    {
+        return $user->documents
+            ->where('category', 'procurement_profile')
             ->isNotEmpty();
     }
 }

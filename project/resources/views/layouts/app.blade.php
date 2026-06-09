@@ -129,6 +129,19 @@
                                         </span>
                                     </a>
                                 </div>
+                                <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.documents.*') ? 'active' : '' }}"
+                                       href="{{ route('procurement.documents.index') }}"
+                                       title="Documents"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-file-earmark-arrow-up fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
                             @endif
 
                             @if (auth()->user()->hasRole('candidate'))

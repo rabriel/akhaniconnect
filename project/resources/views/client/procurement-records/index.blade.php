@@ -53,6 +53,11 @@
                     </thead>
                     <tbody class="text-gray-600 fw-semibold">
                         @forelse ($records as $record)
+                            @php
+                                $progress = (int) ($record->procurementProfile?->verification_progress ?? 0);
+                                $progressBadge = $progress >= 100 ? 'success' : ($progress > 0 ? 'warning' : 'secondary');
+                                $progressLabel = $progress >= 100 ? 'Verified' : ($progress > 0 ? 'In Progress' : 'Pending');
+                            @endphp
                             <tr>
                                 <td>
                                     <div class="d-flex flex-column">
@@ -66,7 +71,11 @@
                                         <span class="text-muted fs-7">{{ $record->procurementProfile?->registration_number ?? 'No registration number' }}</span>
                                     </div>
                                 </td>
-                                <td>{{ $record->procurementProfile?->verification_progress ?? 0 }}%</td>
+                                <td>
+                                    <span class="badge badge-light-{{ $progressBadge }} fs-7 px-4 py-3">
+                                        {{ $progress }}% {{ $progressLabel }}
+                                    </span>
+                                </td>
                                 <td>{{ $record->verificationRecords->where('status', 'verified')->count() }}</td>
                                 <td class="text-end">
                                     <a href="{{ route('client.procurement-records.show', $record) }}" class="btn btn-sm btn-light-primary">View</a>

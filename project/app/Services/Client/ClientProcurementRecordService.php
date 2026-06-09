@@ -66,7 +66,7 @@ class ClientProcurementRecordService
     {
         $procurementUser->loadMissing([
             'profile',
-            'procurementProfile.directors',
+            'procurementProfile.directors.verificationRecords',
             'verificationRecords.attempts',
             'documents',
         ]);
@@ -79,12 +79,22 @@ class ClientProcurementRecordService
             ->where('module', 'enterprise_director')
             ->values();
 
+        $verifiedDirectors = ($procurementUser->procurementProfile?->directors ?? collect())
+            ->where('status', 'verified')
+            ->values();
+        $procurementDocuments = $procurementUser->documents
+            ->where('category', 'procurement_profile')
+            ->sortByDesc('uploaded_at')
+            ->values();
+
         return [
             'user' => $procurementUser,
             'proofOfAddressUploaded' => $procurementUser->documents->where('category', 'proof_of_address')->isNotEmpty(),
             'verifiedModules' => $procurementUser->verificationRecords->where('status', 'verified')->pluck('module')->values(),
             'enterpriseRecord' => $enterpriseRecord,
             'directorRecords' => $directorRecords,
+            'verifiedDirectors' => $verifiedDirectors,
+            'procurementDocuments' => $procurementDocuments,
         ];
     }
 

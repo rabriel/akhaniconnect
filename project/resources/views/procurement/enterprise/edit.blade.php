@@ -61,7 +61,7 @@
         <div class="card-body py-8">
             <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-6">
                 <div>
-                    <div class="fs-2hx fw-bold">{{ $procurementProfile?->company_name ?: 'Enterprise Record' }}</div>
+                    <div class="fs-2 fw-bolder">{{ $procurementProfile?->company_name ?: 'Enterprise Record' }}</div>
                     <div class="text-muted mt-2">
                         {{ $procurementProfile?->registration_number ?: 'Registration number not saved' }}
                         @if ($procurementProfile?->enterprise_type)

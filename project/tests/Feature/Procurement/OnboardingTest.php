@@ -58,6 +58,11 @@ class OnboardingTest extends TestCase
             ->assertSee('Add Director');
 
         $this->actingAs($user)
+            ->get(route('procurement.documents.index'))
+            ->assertOk()
+            ->assertSee('Procurement Documents');
+
+        $this->actingAs($user)
             ->get(route('procurement.documents.proof-of-address'))
             ->assertOk()
             ->assertSee('Upload Document');
@@ -221,6 +226,51 @@ class OnboardingTest extends TestCase
         $this->assertDatabaseHas('documents', [
             'user_id' => $user->id,
             'category' => 'proof_of_address',
+            'status' => 'uploaded',
+        ]);
+    }
+
+    public function test_procurement_user_can_upload_named_supporting_documents(): void
+    {
+        $this->seed();
+        Storage::fake('public');
+
+        $user = User::factory()->withRole(4)->create();
+        $user->profile()->create(['country' => 'ZA']);
+        $user->procurementProfile()->create();
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
+
+        $response = $this->actingAs($user)->post(route('procurement.documents.store'), [
+            'documents' => [
+                [
+                    'name' => 'BBBEE Certificate',
+                    'file' => UploadedFile::fake()->create('bbbee.pdf', 300, 'application/pdf'),
+                ],
+                [
+                    'name' => 'Tax Clearance',
+                    'file' => UploadedFile::fake()->create('tax-clearance.pdf', 300, 'application/pdf'),
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect(route('procurement.documents.index'));
+        $response->assertSessionHas('status');
+
+        $this->assertDatabaseHas('documents', [
+            'user_id' => $user->id,
+            'category' => 'procurement_profile',
+            'display_name' => 'BBBEE Certificate',
+            'status' => 'uploaded',
+        ]);
+
+        $this->assertDatabaseHas('documents', [
+            'user_id' => $user->id,
+            'category' => 'procurement_profile',
+            'display_name' => 'Tax Clearance',
             'status' => 'uploaded',
         ]);
     }

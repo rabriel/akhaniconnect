@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Notifications\ProcurementRecordMessageNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class WorkspaceTest extends TestCase
@@ -87,26 +88,73 @@ class WorkspaceTest extends TestCase
         $client->profile()->create(['country' => 'ZA']);
         $client->clientProfile()->create();
 
-        $procurement = User::factory()->withRole(4)->create();
-        $procurement->profile()->create(['country' => 'ZA']);
-        $procurement->procurementProfile()->create([
+        $procurement = User::factory()->withRole(4)->create([
+            'first_name' => 'Lerato',
+            'surname' => 'Mabena',
+            'phone' => '0820000044',
+        ]);
+        $procurement->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '8905155324082',
+            'gender' => 'Female',
+            'city' => 'Johannesburg',
+        ]);
+        $profile = $procurement->procurementProfile()->create([
             'company_name' => 'Supplier Record',
             'registration_number' => '201408196207',
+            'enterprise_type' => 'Private Company',
+            'enterprise_status' => 'In Business',
+            'company_phone' => '0315550101',
             'verification_progress' => 100,
         ]);
         $procurement->verificationRecords()->create([
-            'module' => 'driver_licence',
+            'module' => 'enterprise',
             'provider' => 'verifynow',
             'status' => 'verified',
-            'provider_reference' => 'driver-123',
+            'provider_reference' => 'enterprise-123',
             'last_verified_at' => now(),
+            'summary' => [
+                'transaction_id' => 'txn-123',
+                'status' => 'verified',
+            ],
+        ]);
+        $profile->directors()->create([
+            'full_name' => 'John Doe',
+            'id_number' => '8001015009087',
+            'initials' => 'JD',
+            'gender' => 'Male',
+            'title' => 'Mister',
+            'marital_status' => 'Single',
+            'privacy_status' => 'ACCEPTS CONTRACTS',
+            'cellular_number' => '0825550100',
+            'email_address' => 'john@example.co.za',
+            'employer' => 'EXAMPLE COMPANY PTY LTD',
+            'number_of_enquiries' => 2,
+            'status' => 'verified',
+            'director_status' => 'Success',
+        ]);
+        $procurement->documents()->create([
+            'category' => 'procurement_profile',
+            'type' => 'supporting_document',
+            'display_name' => 'BBBEE Certificate',
+            'original_name' => 'bbbee-certificate.pdf',
+            'path' => 'documents/procurement_profile/bbbee-certificate.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 1024,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
         ]);
 
         $this->actingAs($client)
             ->get(route('client.procurement-records.show', $procurement))
             ->assertOk()
+            ->assertSee('Verified Procurement Information')
             ->assertSee('Supplier Record')
-            ->assertSee('driver-123');
+            ->assertSee('Enterprise Details')
+            ->assertSee('John Doe')
+            ->assertSee('Procurement Documents')
+            ->assertSee('BBBEE Certificate')
+            ->assertSee('enterprise-123');
     }
 
     public function test_client_can_download_procurement_report(): void
@@ -129,6 +177,92 @@ class WorkspaceTest extends TestCase
         ]);
 
         $response = $this->actingAs($client)->get(route('client.procurement-records.report', $procurement));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_client_can_download_enterprise_report(): void
+    {
+        $this->seed();
+
+        $client = User::factory()->withRole(5)->create();
+        $client->profile()->create(['country' => 'ZA']);
+        $client->clientProfile()->create();
+
+        $procurement = User::factory()->withRole(4)->create();
+        $procurement->profile()->create(['country' => 'ZA']);
+        $procurement->procurementProfile()->create([
+            'company_name' => 'Supplier Record',
+            'registration_number' => '201408196207',
+            'verification_progress' => 100,
+        ]);
+
+        $response = $this->actingAs($client)->get(route('client.procurement-records.enterprise-report', $procurement));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_client_can_download_director_report(): void
+    {
+        $this->seed();
+
+        $client = User::factory()->withRole(5)->create();
+        $client->profile()->create(['country' => 'ZA']);
+        $client->clientProfile()->create();
+
+        $procurement = User::factory()->withRole(4)->create();
+        $procurement->profile()->create(['country' => 'ZA']);
+        $profile = $procurement->procurementProfile()->create([
+            'company_name' => 'Supplier Record',
+            'registration_number' => '201408196207',
+            'verification_progress' => 100,
+        ]);
+        $director = $profile->directors()->create([
+            'full_name' => 'Jane Director',
+            'id_number' => '8001015009087',
+            'status' => 'verified',
+        ]);
+
+        $response = $this->actingAs($client)->get(route('client.procurement-records.director-report', [$procurement, $director]));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_client_can_download_procurement_supporting_document(): void
+    {
+        $this->seed();
+        Storage::fake('public');
+
+        $client = User::factory()->withRole(5)->create();
+        $client->profile()->create(['country' => 'ZA']);
+        $client->clientProfile()->create();
+
+        $procurement = User::factory()->withRole(4)->create();
+        $procurement->profile()->create(['country' => 'ZA']);
+        $procurement->procurementProfile()->create([
+            'company_name' => 'Supplier Record',
+            'registration_number' => '201408196207',
+            'verification_progress' => 100,
+        ]);
+
+        Storage::disk('public')->put('documents/procurement_profile/bbbee.pdf', 'document');
+
+        $document = $procurement->documents()->create([
+            'category' => 'procurement_profile',
+            'type' => 'supporting_document',
+            'display_name' => 'BBBEE Certificate',
+            'original_name' => 'bbbee.pdf',
+            'path' => 'documents/procurement_profile/bbbee.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 8,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($client)->get(route('client.procurement-records.documents.show', [$procurement, $document]));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');

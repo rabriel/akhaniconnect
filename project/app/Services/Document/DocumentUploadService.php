@@ -18,17 +18,20 @@ class DocumentUploadService
         UploadedFile $file,
         string $category,
         string $type,
-        ?Application $application = null
+        ?Application $application = null,
+        ?string $displayName = null
     ): Document
     {
-        return DB::transaction(function () use ($user, $file, $category, $type, $application): Document {
+        return DB::transaction(function () use ($user, $file, $category, $type, $application, $displayName): Document {
             $path = $file->store("documents/{$category}", 'public');
+            $resolvedDisplayName = trim((string) ($displayName ?: pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)));
 
             return Document::query()->create([
                 'user_id' => $user->id,
                 'application_id' => $application?->id,
                 'category' => $category,
                 'type' => $type,
+                'display_name' => $resolvedDisplayName !== '' ? $resolvedDisplayName : null,
                 'original_name' => $file->getClientOriginalName(),
                 'path' => $path,
                 'mime_type' => $file->getClientMimeType() ?: $file->getMimeType() ?: 'application/octet-stream',

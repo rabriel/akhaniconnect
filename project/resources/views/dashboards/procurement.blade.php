@@ -49,6 +49,9 @@
                             </div>
                             <div class="fw-bold text-dark fs-5 mb-2">{{ $step['title'] }}</div>
                             <div class="text-gray-500 fs-7 mb-4">{{ $step['description'] }}</div>
+                            @if (($step['exclude_from_progress'] ?? false) === true)
+                                <div class="text-muted fs-8 mb-4">Optional for progress tracking.</div>
+                            @endif
                             @if ($step['route'])
                                 <a href="{{ $step['route'] }}" class="btn btn-sm {{ $step['status'] === 'verified' ? 'btn-light-success' : 'btn-light-primary' }}">Open</a>
                             @endif
@@ -62,10 +65,17 @@
     <div class="card">
         <div class="card-header border-0">
             <div class="card-title">
-                <h3 class="fw-bolder m-0">Profile Details</h3>
+                <h3 class="fw-bolder m-0">Profile Summary</h3>
             </div>
         </div>
         <div class="card-body pt-2">
+            @php
+                $profile = $user->profile;
+                $procurementProfile = $user->procurementProfile;
+                $directors = $procurementProfile?->directors ?? collect();
+                $verifiedDirectors = $directors->where('status', 'verified')->count();
+            @endphp
+
             <div class="accordion accordion-icon-toggle" id="procurement_profile_summary">
                 <div class="mb-5">
                     <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_personal">
@@ -76,11 +86,38 @@
                     </div>
                     <div id="summary_personal" class="collapse show" data-bs-parent="#procurement_profile_summary">
                         <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Full Name:</strong> {{ $user->full_name }}</div>
-                            <div class="mb-2"><strong>Email Address:</strong> {{ $user->email }}</div>
-                            <div class="mb-2"><strong>Phone:</strong> {{ $user->phone }}</div>
-                            <div class="mb-2"><strong>ID Number:</strong> {{ $user->profile?->id_number ?: 'Not provided' }}</div>
-                            <div class="mb-2"><strong>City:</strong> {{ $user->profile?->city ?: 'Not provided' }}</div>
+                            <div class="row g-5">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Full Name</div>
+                                        <div class="fw-bold fs-5">{{ $user->full_name }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Email Address</div>
+                                        <div class="fw-bold fs-5 text-break">{{ $user->email }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Phone</div>
+                                        <div class="fw-bold fs-5">{{ $user->phone }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">ID Number</div>
+                                        <div class="fw-bold fs-5">{{ $profile?->id_number ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">City</div>
+                                        <div class="fw-bold fs-5">{{ $profile?->city ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,10 +131,32 @@
                     </div>
                     <div id="summary_enterprise" class="collapse" data-bs-parent="#procurement_profile_summary">
                         <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Company Name:</strong> {{ $user->procurementProfile?->company_name ?: 'Not provided' }}</div>
-                            <div class="mb-2"><strong>Registration Number:</strong> {{ $user->procurementProfile?->registration_number ?: 'Not provided' }}</div>
-                            <div class="mb-2"><strong>VAT Number:</strong> {{ $user->procurementProfile?->vat_number ?: 'Not provided' }}</div>
-                            <div class="mb-2"><strong>Company Phone:</strong> {{ $user->procurementProfile?->company_phone ?: 'Not provided' }}</div>
+                            <div class="row g-5">
+                                <div class="col-md-6">
+                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Company Name</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->company_name ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Registration Number</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->registration_number ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">VAT Number</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->vat_number ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Company Phone</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->company_phone ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,7 +170,26 @@
                     </div>
                     <div id="summary_directors" class="collapse" data-bs-parent="#procurement_profile_summary">
                         <div class="pt-5 ps-12">
-                            <div class="mb-2"><strong>Saved Directors:</strong> {{ $user->procurementProfile?->directors?->count() ?? 0 }}</div>
+                            <div class="row g-5">
+                                <div class="col-md-4">
+                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Saved Directors</div>
+                                        <div class="fw-bold fs-5">{{ $directors->count() }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Verified Directors</div>
+                                        <div class="fw-bold fs-5">{{ $verifiedDirectors }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Latest Director</div>
+                                        <div class="fw-bold fs-5">{{ $directors->first()?->full_name ?: 'Not added yet' }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

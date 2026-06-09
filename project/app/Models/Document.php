@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Document extends Model
 {
@@ -20,6 +21,7 @@ class Document extends Model
         'application_id',
         'category',
         'type',
+        'display_name',
         'original_name',
         'path',
         'mime_type',
@@ -52,5 +54,23 @@ class Document extends Model
     public function application(): BelongsTo
     {
         return $this->belongsTo(Application::class);
+    }
+
+    /**
+     * Get the preferred download filename for the document.
+     */
+    public function getDownloadNameAttribute(): string
+    {
+        $originalName = (string) $this->original_name;
+        $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+        $baseName = trim((string) ($this->display_name ?: pathinfo($originalName, PATHINFO_FILENAME)));
+
+        if ($baseName === '') {
+            return $originalName;
+        }
+
+        return $extension !== ''
+            ? Str::finish($baseName, '.' . $extension)
+            : $baseName;
     }
 }
