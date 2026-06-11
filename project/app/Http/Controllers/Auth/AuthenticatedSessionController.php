@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\Analytics\UserActivityLogger;
 use App\Services\Auth\LoginRedirectService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,7 +24,11 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request, LoginRedirectService $loginRedirectService): RedirectResponse
+    public function store(
+        LoginRequest $request,
+        LoginRedirectService $loginRedirectService,
+        UserActivityLogger $userActivityLogger
+    ): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
@@ -30,6 +36,13 @@ class AuthenticatedSessionController extends Controller
         $request->user()->forceFill([
             'last_login_at' => now(),
         ])->save();
+
+        $userActivityLogger->logRequest(
+            $request->user(),
+            $request,
+            new Response('', Response::HTTP_FOUND),
+            'login'
+        );
 
         return redirect()->route($loginRedirectService->resolveDashboardRouteName($request->user()));
     }

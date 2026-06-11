@@ -3,6 +3,7 @@
 namespace Tests\Feature\Authorization;
 
 use App\Mail\WelcomeToAkhaniConnectMail;
+use App\Models\UserActivity;
 use App\Models\VerificationRecord;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -62,6 +63,19 @@ class AuthorizationTest extends TestCase
             ->assertSee('Platform Settings');
     }
 
+    public function test_superadmin_can_access_analytics_page(): void
+    {
+        $this->seed();
+
+        $admin = $this->superadmin();
+
+        $response = $this->actingAs($admin)->get(route('admin.analytics.index'));
+
+        $response->assertOk();
+        $response->assertSee('Analytics & Activity');
+        $response->assertSee('Activity Log');
+    }
+
     public function test_superadmin_can_access_verification_logs_page(): void
     {
         $this->seed();
@@ -100,6 +114,95 @@ class AuthorizationTest extends TestCase
         $response->assertSee('Verification Details');
     }
 
+    public function test_superadmin_can_view_a_procurement_user_detail_page(): void
+    {
+        $this->seed();
+
+        $admin = $this->superadmin();
+        $procurement = User::factory()->withRole(4)->create([
+            'first_name' => 'Lerato',
+            'surname' => 'Mabena',
+        ]);
+        $procurement->profile()->create([
+            'country' => 'ZA',
+            'id_number' => '8905155324082',
+            'city' => 'Johannesburg',
+        ]);
+        $profile = $procurement->procurementProfile()->create([
+            'company_name' => 'Akhani Procurement Services',
+            'registration_number' => '201408196207',
+            'verification_progress' => 100,
+        ]);
+        $procurement->verificationRecords()->create([
+            'module' => 'enterprise',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+            'provider_reference' => 'enterprise-ref-1',
+        ]);
+        $profile->directors()->create([
+            'full_name' => 'John Director',
+            'id_number' => '8001015009087',
+            'status' => 'verified',
+            'director_status' => 'Success',
+        ]);
+        $procurement->documents()->create([
+            'category' => 'procurement_profile',
+            'type' => 'supporting_document',
+            'display_name' => 'BBBEE Certificate',
+            'original_name' => 'bbbee.pdf',
+            'path' => 'documents/procurement_profile/bbbee.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 512,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.users.show', $procurement));
+
+        $response->assertOk();
+        $response->assertSee('Procurement Data Review');
+        $response->assertSee('Akhani Procurement Services');
+        $response->assertSee('BBBEE Certificate');
+    }
+
+    public function test_superadmin_can_view_a_candidate_user_detail_page(): void
+    {
+        $this->seed();
+
+        $admin = $this->superadmin();
+        $candidate = User::factory()->withRole(2)->create([
+            'first_name' => 'Naledi',
+            'surname' => 'Candidate',
+        ]);
+        $candidate->profile()->create([
+            'country' => 'ZA',
+            'city' => 'Pretoria',
+            'province' => 'Gauteng',
+        ]);
+        $candidate->candidateProfile()->create([
+            'job_title' => 'Procurement Administrator',
+            'experience_level' => 'Mid-level',
+            'skills' => 'Excel, sourcing, reporting',
+        ]);
+        $candidate->documents()->create([
+            'category' => 'candidate_profile',
+            'type' => 'cv',
+            'original_name' => 'candidate-cv.pdf',
+            'path' => 'documents/candidate_profile/candidate-cv.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 256,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.users.show', $candidate));
+
+        $response->assertOk();
+        $response->assertSee('Candidate Data Review');
+        $response->assertSee('Procurement Administrator');
+        $response->assertSee('candidate-cv.pdf');
+    }
+
     public function test_superadmin_can_download_procurement_report(): void
     {
         $this->seed();
@@ -113,6 +216,61 @@ class AuthorizationTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.procurement-reports.show', $procurement));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_superadmin_can_download_procurement_supporting_document(): void
+    {
+        $this->seed();
+        Storage::fake('public');
+
+        $admin = $this->superadmin();
+        $procurement = User::factory()->withRole(4)->create();
+        $procurement->profile()->create(['country' => 'ZA']);
+        $procurement->procurementProfile()->create();
+        Storage::disk('public')->put('documents/procurement_profile/bbbee.pdf', 'document');
+        $document = $procurement->documents()->create([
+            'category' => 'procurement_profile',
+            'type' => 'supporting_document',
+            'display_name' => 'BBBEE Certificate',
+            'original_name' => 'bbbee.pdf',
+            'path' => 'documents/procurement_profile/bbbee.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 8,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.procurement-reports.documents.show', [$procurement, $document]));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_superadmin_can_download_candidate_document(): void
+    {
+        $this->seed();
+        Storage::fake('public');
+
+        $admin = $this->superadmin();
+        $candidate = User::factory()->withRole(2)->create();
+        $candidate->profile()->create(['country' => 'ZA']);
+        $candidate->candidateProfile()->create();
+        Storage::disk('public')->put('documents/candidate_profile/candidate-cv.pdf', 'document');
+        $document = $candidate->documents()->create([
+            'category' => 'candidate_profile',
+            'type' => 'cv',
+            'original_name' => 'candidate-cv.pdf',
+            'path' => 'documents/candidate_profile/candidate-cv.pdf',
+            'mime_type' => 'application/pdf',
+            'size' => 8,
+            'status' => 'uploaded',
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.candidates.documents.show', [$candidate, $document]));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
@@ -256,6 +414,77 @@ class AuthorizationTest extends TestCase
         $response = $this->actingAs($candidate)->get(route('admin.users.index'));
 
         $response->assertForbidden();
+    }
+
+    public function test_authenticated_visit_is_tracked_with_ip_country_and_browser_details(): void
+    {
+        $this->seed();
+
+        $admin = $this->superadmin();
+
+        $this->withServerVariables([
+            'REMOTE_ADDR' => '196.25.1.10',
+            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36',
+            'HTTP_CF_IPCOUNTRY' => 'ZA',
+        ])->actingAs($admin)->get(route('admin.users.index'))->assertOk();
+
+        $this->assertDatabaseHas('user_activities', [
+            'user_id' => $admin->id,
+            'activity_type' => 'visit',
+            'route_name' => 'admin.users.index',
+            'ip_address' => '196.25.1.10',
+            'country_code' => 'ZA',
+            'country_name' => 'South Africa',
+            'browser' => 'Google Chrome',
+            'platform' => 'Windows',
+            'device_type' => 'Desktop',
+        ]);
+    }
+
+    public function test_authenticated_session_only_records_one_visit_activity(): void
+    {
+        $this->seed();
+
+        $admin = $this->superadmin();
+
+        $this->actingAs($admin)->get(route('admin.users.index'))->assertOk();
+        $this->actingAs($admin)->get(route('admin.reports.index'))->assertOk();
+        $this->actingAs($admin)->get(route('admin.settings.edit'))->assertOk();
+
+        $this->assertSame(
+            1,
+            UserActivity::query()
+                ->where('user_id', $admin->id)
+                ->where('activity_type', 'visit')
+                ->count()
+        );
+    }
+
+    public function test_successful_login_creates_a_login_activity_record(): void
+    {
+        $this->seed();
+
+        $response = $this->withServerVariables([
+            'REMOTE_ADDR' => '102.88.0.20',
+            'HTTP_USER_AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile Safari/604.1',
+            'HTTP_CF_IPCOUNTRY' => 'ZA',
+        ])->post(route('login.store'), [
+            'email' => 'admin@akhaniconnect.co.za',
+            'password' => 'Akhaniconnect!1',
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard'));
+
+        $admin = $this->superadmin();
+        $activity = UserActivity::query()
+            ->where('user_id', $admin->id)
+            ->where('activity_type', 'login')
+            ->latest('occurred_at')
+            ->first();
+
+        $this->assertNotNull($activity);
+        $this->assertSame('South Africa', $activity->country_name);
+        $this->assertSame('Safari', $activity->browser);
     }
 
     public function test_candidate_cannot_create_a_client_account(): void

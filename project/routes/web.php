@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\CandidateDocumentController as AdminCandidateDocumentController;
 use App\Http\Controllers\Admin\ClientController as AdminClientController;
+use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
+use App\Http\Controllers\Admin\DirectorReportController as AdminDirectorReportController;
+use App\Http\Controllers\Admin\EnterpriseReportController as AdminEnterpriseReportController;
 use App\Http\Controllers\Admin\ProcurementReportController as AdminProcurementReportController;
+use App\Http\Controllers\Admin\ProcurementDocumentController as AdminProcurementDocumentController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\UserDetailController as AdminUserDetailController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -101,6 +107,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/users/create', [AdminUserController::class, 'create'])
             ->middleware('can:users.manage')
             ->name('admin.users.create');
+        Route::get('/admin/users/{user}', [AdminUserDetailController::class, 'show'])
+            ->middleware('can:users.manage')
+            ->name('admin.users.show');
         Route::get('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])
             ->middleware('can:users.manage')
             ->name('admin.users.edit');
@@ -128,9 +137,24 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/procurement-reports/{procurementUser}', [AdminProcurementReportController::class, 'show'])
             ->middleware('can:reports.view')
             ->name('admin.procurement-reports.show');
+        Route::get('/admin/procurement-reports/{procurementUser}/enterprise', [AdminEnterpriseReportController::class, 'show'])
+            ->middleware('can:reports.view')
+            ->name('admin.procurement-reports.enterprise.show');
+        Route::get('/admin/procurement-reports/{procurementUser}/directors/{director}', [AdminDirectorReportController::class, 'show'])
+            ->middleware('can:reports.view')
+            ->name('admin.procurement-reports.director.show');
+        Route::get('/admin/procurement-reports/{procurementUser}/documents/{document}', [AdminProcurementDocumentController::class, 'show'])
+            ->middleware('can:reports.view')
+            ->name('admin.procurement-reports.documents.show');
+        Route::get('/admin/candidates/{candidateUser}/documents/{document}', [AdminCandidateDocumentController::class, 'show'])
+            ->middleware('can:reports.view')
+            ->name('admin.candidates.documents.show');
         Route::get('/admin/reports', AdminReportController::class)
             ->middleware('can:reports.view')
             ->name('admin.reports.index');
+        Route::get('/admin/analytics', [AdminAnalyticsController::class, 'index'])
+            ->middleware('can:reports.view')
+            ->name('admin.analytics.index');
         Route::get('/admin/settings', [AdminSettingController::class, 'edit'])
             ->middleware('can:settings.manage')
             ->name('admin.settings.edit');

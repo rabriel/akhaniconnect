@@ -330,6 +330,19 @@
                                     </a>
                                 </div>
                                 <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.analytics.index') }}"
+                                       title="Analytics"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-graph-up fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="menu-item py-3">
                                     <a class="menu-link menu-center {{ request()->routeIs('admin.verifications.*') ? 'active' : '' }}"
                                        href="{{ route('admin.verifications.index') }}"
                                        title="Verification Logs"

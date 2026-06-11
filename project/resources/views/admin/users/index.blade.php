@@ -59,7 +59,10 @@
                                 </td>
                                 <td>{{ $user->created_at?->format('Y-m-d H:i') }}</td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-light-primary">Edit</a>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-light-primary">View</a>
+                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-light">Edit</a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

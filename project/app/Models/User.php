@@ -121,6 +121,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the tracked activity records for the user.
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class);
+    }
+
+    /**
      * Get the jobs posted by the recruiter.
      */
     public function jobs(): HasMany

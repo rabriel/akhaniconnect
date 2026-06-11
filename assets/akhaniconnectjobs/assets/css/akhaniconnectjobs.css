@@ -1,0 +1,314 @@
+.akhani-connect-jobs {
+    color: #656565;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.akhani-connect-jobs *,
+.akhani-connect-jobs *::before,
+.akhani-connect-jobs *::after {
+    box-sizing: border-box;
+}
+
+.akhani-connect-jobs__search {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+    gap: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(232, 115, 26, 0.14);
+    border-radius: 18px;
+    background: #fffaf6;
+}
+
+.akhani-connect-jobs__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.akhani-connect-jobs__field label {
+    color: #656565;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.akhani-connect-jobs__field input,
+.akhani-connect-jobs__field select {
+    width: 100%;
+    height: 56px;
+    padding: 12px 14px;
+    border: 1px solid #e5ddd7;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #656565;
+    font-size: 16px;
+    line-height: 1.4;
+    appearance: none;
+}
+
+.akhani-connect-jobs__field input:focus,
+.akhani-connect-jobs__field select:focus {
+    outline: none;
+    border-color: #e8731a;
+    box-shadow: 0 0 0 3px rgba(232, 115, 26, 0.12);
+}
+
+.akhani-connect-jobs__actions {
+    display: flex;
+    align-items: stretch;
+    align-self: end;
+    min-height: 56px;
+    gap: 12px;
+}
+
+.akhani-connect-jobs__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.akhani-connect-jobs__button--primary {
+    border: 1px solid #e8731a;
+    background: #e8731a;
+    color: #ffffff;
+}
+
+.akhani-connect-jobs__button--primary:hover {
+    background: #cf6210;
+    border-color: #cf6210;
+    color: #ffffff;
+}
+
+.akhani-connect-jobs__button--secondary {
+    border: 1px solid rgba(232, 115, 26, 0.2);
+    background: #ffffff;
+    color: #e8731a;
+}
+
+.akhani-connect-jobs__button--secondary:hover {
+    border-color: #e8731a;
+    color: #e8731a;
+}
+
+.akhani-connect-jobs__results {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.akhani-connect-jobs__item {
+    border: 1px solid rgba(232, 115, 26, 0.16);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.akhani-connect-jobs__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    padding: 20px 24px;
+    border: 0;
+    background: #ffffff;
+    text-align: left;
+    cursor: pointer;
+}
+
+.akhani-connect-jobs__toggle:hover {
+    background: #fff7f1;
+}
+
+.akhani-connect-jobs__toggle-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.akhani-connect-jobs__title {
+    color: #2b2b2b;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.akhani-connect-jobs__meta {
+    color: #656565;
+    font-size: 15px;
+}
+
+.akhani-connect-jobs__toggle-side {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.akhani-connect-jobs__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(232, 115, 26, 0.12);
+    color: #e8731a;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.akhani-connect-jobs__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: rgba(232, 115, 26, 0.12);
+    color: #e8731a;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.akhani-connect-jobs__toggle[aria-expanded="true"] .akhani-connect-jobs__icon {
+    transform: rotate(45deg);
+}
+
+.akhani-connect-jobs__panel {
+    padding: 0 24px 24px;
+    border-top: 1px solid rgba(232, 115, 26, 0.12);
+}
+
+.akhani-connect-jobs__detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 20px 0;
+}
+
+.akhani-connect-jobs__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff7f1;
+}
+
+.akhani-connect-jobs__detail-label {
+    color: #656565;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.akhani-connect-jobs__detail-value {
+    color: #2b2b2b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.akhani-connect-jobs__description {
+    color: #656565;
+}
+
+.akhani-connect-jobs__description h4 {
+    margin: 20px 0 8px;
+    color: #2b2b2b;
+    font-size: 18px;
+}
+
+.akhani-connect-jobs__description ul {
+    margin: 0 0 16px 18px;
+}
+
+.akhani-connect-jobs__apply {
+    padding-top: 8px;
+}
+
+.akhani-connect-jobs__empty {
+    padding: 24px;
+    border: 1px dashed rgba(232, 115, 26, 0.24);
+    border-radius: 18px;
+    background: #fffaf6;
+}
+
+.akhani-connect-jobs__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.akhani-connect-jobs__page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgba(232, 115, 26, 0.2);
+    border-radius: 12px;
+    background: #ffffff;
+    color: #656565;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.akhani-connect-jobs__page-link--nav {
+    min-width: 96px;
+    padding: 0 18px;
+}
+
+.akhani-connect-jobs__page-link:hover,
+.akhani-connect-jobs__page-link.is-active {
+    border-color: #e8731a;
+    background: #e8731a;
+    color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+    .akhani-connect-jobs__search {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .akhani-connect-jobs__detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .akhani-connect-jobs__search {
+        grid-template-columns: 1fr;
+    }
+
+    .akhani-connect-jobs__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .akhani-connect-jobs__toggle {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .akhani-connect-jobs__toggle-side {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .akhani-connect-jobs__detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
