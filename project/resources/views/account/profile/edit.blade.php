@@ -7,8 +7,10 @@
 @section('content')
     @php
         $user = auth()->user();
-        $mustVerifyIdentity = ($user->hasRole('candidate') || $user->hasRole('procurement')) && ! $user->hasVerifiedIdentity();
-        $idNumberLocked = ($user->hasRole('candidate') || $user->hasRole('procurement')) && $user->hasVerifiedIdentity();
+        $identityManagedRoles = ['candidate', 'client', 'recruitment', 'procurement'];
+        $requiresIdentityVerification = collect($identityManagedRoles)->contains(fn ($role) => $user->hasRole($role));
+        $mustVerifyIdentity = $requiresIdentityVerification && ! $user->hasVerifiedIdentity();
+        $idNumberLocked = $requiresIdentityVerification && $user->hasVerifiedIdentity();
     @endphp
     <div class="card">
         <div class="card-header border-0 pt-6">

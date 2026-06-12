@@ -1,15 +1,17 @@
 @extends('layouts.app', [
-    'title' => 'Create Job | Akhani Connect',
-    'heading' => 'Create Job Post',
-    'subheading' => 'Publish a new vacancy for candidate applications.',
+    'title' => 'Edit Job | Akhani Connect',
+    'heading' => 'Edit Job Post',
+    'subheading' => 'Update vacancy details before candidates apply.',
 ])
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ route('recruitment.jobs.store') }}">
+            <form method="POST" action="{{ route('recruitment.jobs.update', $job) }}">
                 @csrf
-                @include('recruitment.jobs._form', ['submitLabel' => 'Save job post'])
+                @method('PUT')
+
+                @include('recruitment.jobs._form', ['submitLabel' => 'Update job post'])
             </form>
         </div>
     </div>

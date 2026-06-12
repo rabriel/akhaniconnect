@@ -25,6 +25,7 @@
                             <th>Type</th>
                             <th>Status</th>
                             <th>Published</th>
+                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 fw-semibold">
@@ -40,10 +41,22 @@
                                     </span>
                                 </td>
                                 <td>{{ $job->published_at?->format('d M Y') ?? 'Draft' }}</td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-2">
+                                        <a href="{{ route('recruitment.jobs.edit', $job) }}" class="btn btn-sm btn-light-primary">
+                                            Edit
+                                        </a>
+                                        <form method="POST" action="{{ route('recruitment.jobs.destroy', $job) }}" class="js-job-delete-form" data-job-title="{{ $job->title }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-light-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-10 text-muted">No jobs created yet.</td>
+                                <td colspan="7" class="text-center py-10 text-muted">No jobs created yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -56,3 +69,20 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.js-job-delete-form').forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    const jobTitle = form.dataset.jobTitle || 'this job post';
+                    const confirmed = window.confirm('Delete "' + jobTitle + '"? This will also remove linked applications.');
+
+                    if (!confirmed) {
+                        event.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

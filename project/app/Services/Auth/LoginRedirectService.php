@@ -15,6 +15,14 @@ class LoginRedirectService
             return 'candidate.identity-verification.show';
         }
 
+        if ($user->hasRole('client') && ! $user->hasVerifiedIdentity()) {
+            return 'client.identity-verification.show';
+        }
+
+        if ($user->hasRole('recruitment') && ! $user->hasVerifiedIdentity()) {
+            return 'recruitment.identity-verification.show';
+        }
+
         if ($user->hasRole('procurement') && ! $user->hasVerifiedIdentity()) {
             return 'procurement.identity-verification.show';
         }

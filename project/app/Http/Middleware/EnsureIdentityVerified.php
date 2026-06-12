@@ -19,7 +19,7 @@ class EnsureIdentityVerified
             abort(403);
         }
 
-        if (! $user->hasRole('candidate') && ! $user->hasRole('procurement')) {
+        if (! $user->hasRole('candidate') && ! $user->hasRole('client') && ! $user->hasRole('recruitment') && ! $user->hasRole('procurement')) {
             return $next($request);
         }
 
@@ -29,6 +29,8 @@ class EnsureIdentityVerified
 
         $route = match (true) {
             $user->hasRole('candidate') => 'candidate.identity-verification.show',
+            $user->hasRole('client') => 'client.identity-verification.show',
+            $user->hasRole('recruitment') => 'recruitment.identity-verification.show',
             $user->hasRole('procurement') => 'procurement.identity-verification.show',
             default => null,
         };

@@ -31,6 +31,7 @@ class StoreJobRequest extends FormRequest
             'employment_type' => ['nullable', 'string', Rule::in(['Permanent', 'Contract', 'Temporary', 'Internship'])],
             'description' => ['required', 'string', 'min:20'],
             'status' => ['required', 'string', Rule::in(['draft', 'published'])],
+            'published_at' => ['nullable', 'date', 'required_if:status,published'],
         ];
     }
 }

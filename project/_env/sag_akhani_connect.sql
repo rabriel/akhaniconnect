@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2026 at 08:46 AM
+-- Generation Time: Jun 12, 2026 at 08:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -73,7 +73,7 @@ CREATE TABLE `candidate_profiles` (
 --
 
 INSERT INTO `candidate_profiles` (`id`, `user_id`, `job_title`, `experience_level`, `employment_status`, `notice_period`, `willing_to_relocate`, `job_industry`, `preferred_employment_type`, `salary_expectation`, `education_level`, `education`, `certifications`, `experience`, `skills`, `bio`, `cv_path`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Procurement Administrator', 'Mid-level', 'Available', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Seeded candidate account for Akhani Connect testing.', NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 2, 'Procurement Administrator', 'Mid-level', 'Available', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Seeded candidate account for Akhani Connect testing.', NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -97,7 +97,7 @@ CREATE TABLE `client_profiles` (
 --
 
 INSERT INTO `client_profiles` (`id`, `user_id`, `company_name`, `contact_person_name`, `company_phone`, `access_scope`, `created_at`, `updated_at`) VALUES
-(1, 5, 'Akhani Client Group', 'Nandi Dlamini', '0515550101', 'All procurement records', '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 5, 'Akhani Client Group', 'Nandi Dlamini', '0515550101', 'All procurement records', '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -163,18 +163,18 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `user_id`, `title`, `location`, `province`, `employment_type`, `description`, `status`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Procurement Administrator', 'Johannesburg', 'Gauteng', 'Permanent', '<p>A growing supply chain business is looking for a Procurement Administrator to support vendor onboarding, purchase order tracking, and reporting for internal stakeholders.</p><h4>Key Responsibilities</h4><ul><li>Capture purchase orders and maintain supplier records.</li><li>Follow up on quotations, delivery dates, and outstanding paperwork.</li><li>Prepare weekly procurement status reports for management.</li></ul><h4>Minimum Requirements</h4><ul><li>2+ years of procurement or administration experience.</li><li>Strong Excel and document management skills.</li><li>Comfortable working in a fast-paced operations environment.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(2, 3, 'Site Quantity Surveyor', 'Gqeberha', 'Eastern Cape', 'Contract', '<p>A construction contractor requires a Site Quantity Surveyor to manage project cost tracking, subcontractor measurements, and claims support on active building projects.</p><h4>Key Responsibilities</h4><ul><li>Measure work completed on site and prepare payment certificates.</li><li>Track variations, material usage, and subcontractor claims.</li><li>Assist with cost reports and final account preparation.</li></ul><h4>Minimum Requirements</h4><ul><li>National Diploma or Degree in Quantity Surveying.</li><li>Experience on building or civil projects.</li><li>Strong attention to detail and site coordination ability.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(3, 3, 'Warehouse Supervisor', 'Bloemfontein', 'Free State', 'Permanent', '<p>An established logistics operator is hiring a Warehouse Supervisor to lead daily warehouse activities, inventory control, and dispatch coordination.</p><h4>Key Responsibilities</h4><ul><li>Supervise receiving, picking, packing, and dispatch teams.</li><li>Monitor stock movement and investigate inventory variances.</li><li>Ensure warehouse safety and housekeeping standards are maintained.</li></ul><h4>Minimum Requirements</h4><ul><li>3+ years of warehousing or distribution supervision experience.</li><li>Experience with inventory systems and stock reconciliation.</li><li>Strong people management and reporting skills.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(4, 3, 'HR Officer', 'Durban', 'KwaZulu-Natal', 'Permanent', '<p>A regional services company is seeking an HR Officer to support recruitment administration, onboarding, leave management, and employee relations processes.</p><h4>Key Responsibilities</h4><ul><li>Coordinate interview scheduling, offers, and onboarding packs.</li><li>Maintain leave records and support payroll-related queries.</li><li>Assist with employee relations documentation and policy communication.</li></ul><h4>Minimum Requirements</h4><ul><li>Diploma or Degree in Human Resources or related field.</li><li>2+ years of generalist HR administration experience.</li><li>Good understanding of South African labour practices.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(5, 3, 'Junior IT Support Technician', 'Polokwane', 'Limpopo', 'Permanent', '<p>A technology support business is looking for a Junior IT Support Technician to assist users with hardware, software, and connectivity issues across branch offices.</p><h4>Key Responsibilities</h4><ul><li>Log and resolve first-line support tickets.</li><li>Set up workstations, printers, and user accounts.</li><li>Escalate unresolved issues and maintain support documentation.</li></ul><h4>Minimum Requirements</h4><ul><li>Relevant IT certificate or diploma.</li><li>Basic troubleshooting knowledge across Windows and networks.</li><li>Good communication and customer service skills.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(6, 3, 'Operations Coordinator', 'Nelspruit', 'Mpumalanga', 'Permanent', '<p>A field services company needs an Operations Coordinator to manage scheduling, customer communication, and performance tracking across multiple teams.</p><h4>Key Responsibilities</h4><ul><li>Coordinate technician schedules and route planning.</li><li>Maintain service logs and update customers on progress.</li><li>Compile daily and weekly operational performance reports.</li></ul><h4>Minimum Requirements</h4><ul><li>Experience in operations, logistics, or scheduling.</li><li>Excellent organisational and communication skills.</li><li>Strong administrative ability and attention to detail.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(7, 3, 'Safety Officer', 'Kimberley', 'Northern Cape', 'Contract', '<p>A mining support contractor is searching for a Safety Officer to drive site compliance, toolbox talks, inspections, and incident follow-up.</p><h4>Key Responsibilities</h4><ul><li>Conduct daily site inspections and risk observations.</li><li>Maintain safety files, permits, and compliance registers.</li><li>Support incident investigations and corrective action tracking.</li></ul><h4>Minimum Requirements</h4><ul><li>Relevant safety qualification and registration where required.</li><li>Experience in industrial, mining, or construction environments.</li><li>Strong reporting and stakeholder engagement skills.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(8, 3, 'Sales Representative', 'Mahikeng', 'North West', 'Permanent', '<p>A fast-moving consumer goods distributor is hiring a Sales Representative to grow customer relationships and achieve monthly sales targets in the region.</p><h4>Key Responsibilities</h4><ul><li>Visit customers, present promotions, and secure orders.</li><li>Maintain route plans and submit accurate sales reports.</li><li>Support merchandising and customer service activities.</li></ul><h4>Minimum Requirements</h4><ul><li>Proven field sales experience.</li><li>Valid driver’s licence and willingness to travel locally.</li><li>Good communication and target-driven mindset.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(9, 3, 'Financial Accountant', 'Cape Town', 'Western Cape', 'Permanent', '<p>A growing finance team requires a Financial Accountant to manage month-end reporting, reconciliations, compliance support, and audit preparation.</p><h4>Key Responsibilities</h4><ul><li>Prepare journals, reconciliations, and monthly financial reports.</li><li>Support statutory compliance and audit document preparation.</li><li>Analyse variances and provide finance insights to management.</li></ul><h4>Minimum Requirements</h4><ul><li>Completed accounting qualification.</li><li>Experience in month-end reporting and reconciliations.</li><li>Strong Excel skills and attention to accuracy.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(10, 3, 'Receptionist and Office Administrator', 'Johannesburg', 'Gauteng', 'Permanent', '<p>A professional services office is seeking a Receptionist and Office Administrator to manage front-desk operations and day-to-day office support.</p><h4>Key Responsibilities</h4><ul><li>Welcome visitors and handle incoming calls professionally.</li><li>Manage meeting room bookings, courier requests, and office supplies.</li><li>Support filing, correspondence, and general administration.</li></ul><h4>Minimum Requirements</h4><ul><li>Previous reception or office administration experience.</li><li>Professional communication and presentation skills.</li><li>Good organisational skills and confidence with office systems.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(11, 3, 'Mechanical Maintenance Fitter', 'Middelburg', 'Mpumalanga', 'Contract', '<p>An industrial plant is looking for a Mechanical Maintenance Fitter to assist with preventative maintenance, breakdown support, and shutdown work.</p><h4>Key Responsibilities</h4><ul><li>Carry out planned maintenance on production equipment.</li><li>Respond to breakdowns and assist with root-cause analysis.</li><li>Complete maintenance documentation and safety checks.</li></ul><h4>Minimum Requirements</h4><ul><li>Trade-tested fitter qualification.</li><li>Experience in plant or heavy industrial maintenance.</li><li>Ability to work shifts or shutdown periods when required.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22'),
-(12, 3, 'Customer Service Consultant', 'Pietermaritzburg', 'KwaZulu-Natal', 'Permanent', '<p>A customer-focused business is recruiting a Customer Service Consultant to handle inbound queries, resolve issues, and maintain service excellence.</p><h4>Key Responsibilities</h4><ul><li>Respond to customer queries via phone and email.</li><li>Resolve service issues and escalate complex matters appropriately.</li><li>Maintain accurate customer records and interaction notes.</li></ul><h4>Minimum Requirements</h4><ul><li>Experience in customer service or call centre support.</li><li>Clear written and verbal communication skills.</li><li>Calm problem-solving approach and attention to detail.</li></ul>', 'published', '2026-06-12 04:46:22', '2026-06-12 04:46:22', '2026-06-12 04:46:22');
+(1, 3, 'Procurement Administrator', 'Johannesburg', 'Gauteng', 'Permanent', '<p>A growing supply chain business is looking for a Procurement Administrator to support vendor onboarding, purchase order tracking, and reporting for internal stakeholders.</p><h4>Key Responsibilities</h4><ul><li>Capture purchase orders and maintain supplier records.</li><li>Follow up on quotations, delivery dates, and outstanding paperwork.</li><li>Prepare weekly procurement status reports for management.</li></ul><h4>Minimum Requirements</h4><ul><li>2+ years of procurement or administration experience.</li><li>Strong Excel and document management skills.</li><li>Comfortable working in a fast-paced operations environment.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(2, 3, 'Site Quantity Surveyor', 'Gqeberha', 'Eastern Cape', 'Contract', '<p>A construction contractor requires a Site Quantity Surveyor to manage project cost tracking, subcontractor measurements, and claims support on active building projects.</p><h4>Key Responsibilities</h4><ul><li>Measure work completed on site and prepare payment certificates.</li><li>Track variations, material usage, and subcontractor claims.</li><li>Assist with cost reports and final account preparation.</li></ul><h4>Minimum Requirements</h4><ul><li>National Diploma or Degree in Quantity Surveying.</li><li>Experience on building or civil projects.</li><li>Strong attention to detail and site coordination ability.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(3, 3, 'Warehouse Supervisor', 'Bloemfontein', 'Free State', 'Permanent', '<p>An established logistics operator is hiring a Warehouse Supervisor to lead daily warehouse activities, inventory control, and dispatch coordination.</p><h4>Key Responsibilities</h4><ul><li>Supervise receiving, picking, packing, and dispatch teams.</li><li>Monitor stock movement and investigate inventory variances.</li><li>Ensure warehouse safety and housekeeping standards are maintained.</li></ul><h4>Minimum Requirements</h4><ul><li>3+ years of warehousing or distribution supervision experience.</li><li>Experience with inventory systems and stock reconciliation.</li><li>Strong people management and reporting skills.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(4, 3, 'HR Officer', 'Durban', 'KwaZulu-Natal', 'Permanent', '<p>A regional services company is seeking an HR Officer to support recruitment administration, onboarding, leave management, and employee relations processes.</p><h4>Key Responsibilities</h4><ul><li>Coordinate interview scheduling, offers, and onboarding packs.</li><li>Maintain leave records and support payroll-related queries.</li><li>Assist with employee relations documentation and policy communication.</li></ul><h4>Minimum Requirements</h4><ul><li>Diploma or Degree in Human Resources or related field.</li><li>2+ years of generalist HR administration experience.</li><li>Good understanding of South African labour practices.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(5, 3, 'Junior IT Support Technician', 'Polokwane', 'Limpopo', 'Permanent', '<p>A technology support business is looking for a Junior IT Support Technician to assist users with hardware, software, and connectivity issues across branch offices.</p><h4>Key Responsibilities</h4><ul><li>Log and resolve first-line support tickets.</li><li>Set up workstations, printers, and user accounts.</li><li>Escalate unresolved issues and maintain support documentation.</li></ul><h4>Minimum Requirements</h4><ul><li>Relevant IT certificate or diploma.</li><li>Basic troubleshooting knowledge across Windows and networks.</li><li>Good communication and customer service skills.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(6, 3, 'Operations Coordinator', 'Nelspruit', 'Mpumalanga', 'Permanent', '<p>A field services company needs an Operations Coordinator to manage scheduling, customer communication, and performance tracking across multiple teams.</p><h4>Key Responsibilities</h4><ul><li>Coordinate technician schedules and route planning.</li><li>Maintain service logs and update customers on progress.</li><li>Compile daily and weekly operational performance reports.</li></ul><h4>Minimum Requirements</h4><ul><li>Experience in operations, logistics, or scheduling.</li><li>Excellent organisational and communication skills.</li><li>Strong administrative ability and attention to detail.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(7, 3, 'Safety Officer', 'Kimberley', 'Northern Cape', 'Contract', '<p>A mining support contractor is searching for a Safety Officer to drive site compliance, toolbox talks, inspections, and incident follow-up.</p><h4>Key Responsibilities</h4><ul><li>Conduct daily site inspections and risk observations.</li><li>Maintain safety files, permits, and compliance registers.</li><li>Support incident investigations and corrective action tracking.</li></ul><h4>Minimum Requirements</h4><ul><li>Relevant safety qualification and registration where required.</li><li>Experience in industrial, mining, or construction environments.</li><li>Strong reporting and stakeholder engagement skills.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(8, 3, 'Sales Representative', 'Mahikeng', 'North West', 'Permanent', '<p>A fast-moving consumer goods distributor is hiring a Sales Representative to grow customer relationships and achieve monthly sales targets in the region.</p><h4>Key Responsibilities</h4><ul><li>Visit customers, present promotions, and secure orders.</li><li>Maintain route plans and submit accurate sales reports.</li><li>Support merchandising and customer service activities.</li></ul><h4>Minimum Requirements</h4><ul><li>Proven field sales experience.</li><li>Valid driver’s licence and willingness to travel locally.</li><li>Good communication and target-driven mindset.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(9, 3, 'Financial Accountant', 'Cape Town', 'Western Cape', 'Permanent', '<p>A growing finance team requires a Financial Accountant to manage month-end reporting, reconciliations, compliance support, and audit preparation.</p><h4>Key Responsibilities</h4><ul><li>Prepare journals, reconciliations, and monthly financial reports.</li><li>Support statutory compliance and audit document preparation.</li><li>Analyse variances and provide finance insights to management.</li></ul><h4>Minimum Requirements</h4><ul><li>Completed accounting qualification.</li><li>Experience in month-end reporting and reconciliations.</li><li>Strong Excel skills and attention to accuracy.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(10, 3, 'Receptionist and Office Administrator', 'Johannesburg', 'Gauteng', 'Permanent', '<p>A professional services office is seeking a Receptionist and Office Administrator to manage front-desk operations and day-to-day office support.</p><h4>Key Responsibilities</h4><ul><li>Welcome visitors and handle incoming calls professionally.</li><li>Manage meeting room bookings, courier requests, and office supplies.</li><li>Support filing, correspondence, and general administration.</li></ul><h4>Minimum Requirements</h4><ul><li>Previous reception or office administration experience.</li><li>Professional communication and presentation skills.</li><li>Good organisational skills and confidence with office systems.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(11, 3, 'Mechanical Maintenance Fitter', 'Middelburg', 'Mpumalanga', 'Contract', '<p>An industrial plant is looking for a Mechanical Maintenance Fitter to assist with preventative maintenance, breakdown support, and shutdown work.</p><h4>Key Responsibilities</h4><ul><li>Carry out planned maintenance on production equipment.</li><li>Respond to breakdowns and assist with root-cause analysis.</li><li>Complete maintenance documentation and safety checks.</li></ul><h4>Minimum Requirements</h4><ul><li>Trade-tested fitter qualification.</li><li>Experience in plant or heavy industrial maintenance.</li><li>Ability to work shifts or shutdown periods when required.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26'),
+(12, 3, 'Customer Service Consultant', 'Pietermaritzburg', 'KwaZulu-Natal', 'Permanent', '<p>A customer-focused business is recruiting a Customer Service Consultant to handle inbound queries, resolve issues, and maintain service excellence.</p><h4>Key Responsibilities</h4><ul><li>Respond to customer queries via phone and email.</li><li>Resolve service issues and escalate complex matters appropriately.</li><li>Maintain accurate customer records and interaction notes.</li></ul><h4>Minimum Requirements</h4><ul><li>Experience in customer service or call centre support.</li><li>Clear written and verbal communication skills.</li><li>Calm problem-solving approach and attention to detail.</li></ul>', 'published', '2026-06-12 04:28:26', '2026-06-12 04:28:26', '2026-06-12 04:28:26');
 
 -- --------------------------------------------------------
 
@@ -275,14 +275,14 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `slug`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'View dashboard', 'dashboard.view', 'Access role dashboard pages.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(2, 'View profile', 'profile.view', 'View own account profile.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(3, 'Update profile', 'profile.update', 'Update own account profile.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(4, 'Manage users', 'users.manage', 'Create, update, and manage platform users.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(5, 'Manage roles', 'roles.manage', 'Manage system roles and access assignments.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(6, 'Manage settings', 'settings.manage', 'Update platform-level settings.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(7, 'View reports', 'reports.view', 'Access reporting pages.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(8, 'Manage clients', 'clients.manage', 'Create and manage client accounts.', '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 'View dashboard', 'dashboard.view', 'Access role dashboard pages.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(2, 'View profile', 'profile.view', 'View own account profile.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(3, 'Update profile', 'profile.update', 'Update own account profile.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(4, 'Manage users', 'users.manage', 'Create, update, and manage platform users.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(5, 'Manage roles', 'roles.manage', 'Manage system roles and access assignments.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(6, 'Manage settings', 'settings.manage', 'Update platform-level settings.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(7, 'View reports', 'reports.view', 'Access reporting pages.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(8, 'Manage clients', 'clients.manage', 'Create and manage client accounts.', '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -303,26 +303,26 @@ CREATE TABLE `permission_role` (
 --
 
 INSERT INTO `permission_role` (`id`, `role_id`, `permission_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(2, 1, 2, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(3, 1, 3, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(4, 1, 4, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(5, 1, 5, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(6, 1, 6, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(7, 1, 7, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(8, 1, 8, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(9, 2, 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(10, 2, 2, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(11, 2, 3, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(12, 3, 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(13, 3, 2, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(14, 3, 3, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(15, 4, 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(16, 4, 2, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(17, 4, 3, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(18, 5, 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(19, 5, 2, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(20, 5, 3, '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 1, 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(2, 1, 2, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(3, 1, 3, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(4, 1, 4, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(5, 1, 5, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(6, 1, 6, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(7, 1, 7, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(8, 1, 8, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(9, 2, 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(10, 2, 2, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(11, 2, 3, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(12, 3, 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(13, 3, 2, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(14, 3, 3, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(15, 4, 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(16, 4, 2, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(17, 4, 3, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(18, 5, 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(19, 5, 2, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(20, 5, 3, '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -421,7 +421,7 @@ CREATE TABLE `procurement_profiles` (
 --
 
 INSERT INTO `procurement_profiles` (`id`, `user_id`, `company_name`, `registration_number`, `vat_number`, `company_phone`, `enterprise_status`, `enterprise_type`, `enterprise_address`, `enterprise_data`, `enterprise_synced_at`, `verification_progress`, `created_at`, `updated_at`) VALUES
-(1, 4, 'Akhani Procurement Services', '201408196207', '4123456789', '0315550101', NULL, NULL, NULL, NULL, NULL, 100, '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 4, 'Akhani Procurement Services', '201408196207', '4123456789', '0315550101', NULL, NULL, NULL, NULL, NULL, 100, '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -457,11 +457,11 @@ CREATE TABLE `profiles` (
 --
 
 INSERT INTO `profiles` (`id`, `user_id`, `date_of_birth`, `gender`, `id_number`, `passport_number`, `phone_secondary`, `avatar_path`, `address_line_1`, `address_line_2`, `suburb`, `city`, `province`, `postal_code`, `country`, `identity_verified`, `identity_verified_at`, `profile_completed`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Johannesburg', 'Gauteng', NULL, 'ZA', 1, '2026-06-12 04:46:20', 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(2, 2, NULL, 'Male', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pretoria', 'Gauteng', NULL, 'ZA', 1, '2026-06-12 04:46:20', 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(3, 3, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cape Town', 'Western Cape', NULL, 'ZA', 1, '2026-06-12 04:46:20', 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(4, 4, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Durban', 'KwaZulu-Natal', NULL, 'ZA', 1, '2026-06-12 04:46:20', 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(5, 5, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Bloemfontein', 'Free State', NULL, 'ZA', 1, '2026-06-12 04:46:20', 1, '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 1, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Johannesburg', 'Gauteng', NULL, 'ZA', 1, '2026-06-12 04:28:24', 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(2, 2, NULL, 'Male', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pretoria', 'Gauteng', NULL, 'ZA', 1, '2026-06-12 04:28:24', 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(3, 3, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cape Town', 'Western Cape', NULL, 'ZA', 1, '2026-06-12 04:28:24', 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(4, 4, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Durban', 'KwaZulu-Natal', NULL, 'ZA', 1, '2026-06-12 04:28:24', 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(5, 5, NULL, 'Female', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Bloemfontein', 'Free State', NULL, 'ZA', 1, '2026-06-12 04:28:24', 1, '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -486,7 +486,7 @@ CREATE TABLE `recruitment_profiles` (
 --
 
 INSERT INTO `recruitment_profiles` (`id`, `user_id`, `company_name`, `registration_number`, `website`, `company_phone`, `contact_person_name`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Akhani Talent', '2026/000001/07', 'https://akhaniconnect.co.za', '0215550101', 'Refilwe Naidoo', '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 3, 'Akhani Talent', '2026/000001/07', 'https://akhaniconnect.co.za', '0215550101', 'Refilwe Naidoo', '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -508,11 +508,11 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `slug`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'Superadmin', 'superadmin', 'Platform owner with full administrative access.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(2, 'Candidate', 'candidate', 'Candidate account for job applications and profile management.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(3, 'Recruitment', 'recruitment', 'Recruitment account for managing candidates and recruitment workflows.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(4, 'Procurement', 'procurement', 'Procurement account for verification and enterprise workflows.', '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(5, 'Client', 'client', 'Client account with controlled access to procurement records.', '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 'Superadmin', 'superadmin', 'Platform owner with full administrative access.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(2, 'Candidate', 'candidate', 'Candidate account for job applications and profile management.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(3, 'Recruitment', 'recruitment', 'Recruitment account for managing candidates and recruitment workflows.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(4, 'Procurement', 'procurement', 'Procurement account for verification and enterprise workflows.', '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(5, 'Client', 'client', 'Client account with controlled access to procurement records.', '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -542,11 +542,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `first_name`, `surname`, `email`, `phone`, `email_verified_at`, `phone_verified_at`, `password`, `status`, `last_login_at`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Aisha', 'Nkosi', 'admin@akhaniconnect.co.za', '0820000001', '2026-06-12 04:46:20', '2026-06-12 04:46:20', '$2y$12$bNXLUCUVl8jicWBkPZQqKOxF5V4J.zgEZuZpmu.fnraF9tOdrTQuu', 'active', NULL, NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(2, 2, 'Themba', 'Mokoena', 'candidate@akhaniconnect.co.za', '0820000002', '2026-06-12 04:46:20', '2026-06-12 04:46:20', '$2y$12$eI9vmNJGntycFTnGbZmSr.EUwR/9wg08X.zwHG1b9QRgBSp7x5FTm', 'active', NULL, NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(3, 3, 'Refilwe', 'Naidoo', 'recruitment@akhaniconnect.co.za', '0820000003', '2026-06-12 04:46:20', '2026-06-12 04:46:20', '$2y$12$1xXGzkoJYmfTmtYC5vOVc.prsIvb4NEIrBS/3r/4wXDwQU3aEw2EW', 'active', NULL, NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(4, 4, 'Lerato', 'Mabena', 'procurement@akhaniconnect.co.za', '0820000004', '2026-06-12 04:46:20', '2026-06-12 04:46:20', '$2y$12$hTNWRUWEgHzYdEI/r5SCau2o0PDmLNIvzCjV2AYzu1hDAFIiiBSaC', 'active', NULL, NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20'),
-(5, 5, 'Nandi', 'Dlamini', 'client@akhaniconnect.co.za', '0820000005', '2026-06-12 04:46:20', '2026-06-12 04:46:20', '$2y$12$b1cAqt5pOl/1YHZQGsitW.bDZuAvlHEgfAdzqNGzdf/rD9tmTDFv.', 'active', NULL, NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20');
+(1, 1, 'Aisha', 'Nkosi', 'admin@akhaniconnect.co.za', '0820000001', '2026-06-12 04:28:24', '2026-06-12 04:28:24', '$2y$12$DEjRrJbbfzyBvrDfFySBo..oJBf17Rsd2CfV5ly7W4f/BlZ50FFkq', 'active', NULL, NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(2, 2, 'Themba', 'Mokoena', 'candidate@akhaniconnect.co.za', '0820000002', '2026-06-12 04:28:24', '2026-06-12 04:28:24', '$2y$12$ojuzJPYrebKzEZmAZh.hT.bYEg.whTs1CdzqkyOgj7388iZC3JYYC', 'active', NULL, NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(3, 3, 'Refilwe', 'Naidoo', 'recruitment@akhaniconnect.co.za', '0820000003', '2026-06-12 04:28:24', '2026-06-12 04:28:24', '$2y$12$A4efsUnLnWt6kpQiv/usX.pJfumb0Rss1eg0YAvKQZrIMjiWQbZtm', 'active', NULL, NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(4, 4, 'Lerato', 'Mabena', 'procurement@akhaniconnect.co.za', '0820000004', '2026-06-12 04:28:24', '2026-06-12 04:28:24', '$2y$12$WIR0L8nTsd9SVed4hfa93uJRLUmdtP235u3eNFtH1S973S6Z6MC2q', 'active', NULL, NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24'),
+(5, 5, 'Nandi', 'Dlamini', 'client@akhaniconnect.co.za', '0820000005', '2026-06-12 04:28:24', '2026-06-12 04:28:24', '$2y$12$tEzXGcEZ7bU/cszoGXsu4OPIws4XXtqzynCBjR1ILaTejfXjybMiy', 'active', NULL, NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24');
 
 -- --------------------------------------------------------
 
@@ -622,8 +622,8 @@ CREATE TABLE `verification_records` (
 --
 
 INSERT INTO `verification_records` (`id`, `user_id`, `module`, `provider`, `status`, `provider_reference`, `summary`, `last_error`, `last_verified_at`, `created_at`, `updated_at`, `verifiable_type`, `verifiable_id`) VALUES
-(1, 2, 'sa_identity', 'verifynow', 'verified', 'seeded-candidate-sa-id', '{\"seeded\":true}', NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20', '2026-06-12 04:46:20', NULL, NULL),
-(2, 4, 'sa_identity', 'verifynow', 'verified', 'seeded-procurement-sa-id', '{\"seeded\":true}', NULL, '2026-06-12 04:46:20', '2026-06-12 04:46:20', '2026-06-12 04:46:20', NULL, NULL);
+(1, 2, 'sa_identity', 'verifynow', 'verified', 'seeded-candidate-sa-id', '{\"seeded\":true}', NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24', '2026-06-12 04:28:24', NULL, NULL),
+(2, 4, 'sa_identity', 'verifynow', 'verified', 'seeded-procurement-sa-id', '{\"seeded\":true}', NULL, '2026-06-12 04:28:24', '2026-06-12 04:28:24', '2026-06-12 04:28:24', NULL, NULL);
 
 --
 -- Indexes for dumped tables

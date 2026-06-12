@@ -12,6 +12,8 @@ class StoreSouthAfricanIdVerificationRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()?->hasRole('candidate')
+            || $this->user()?->hasRole('client')
+            || $this->user()?->hasRole('recruitment')
             || $this->user()?->hasRole('procurement');
     }
 

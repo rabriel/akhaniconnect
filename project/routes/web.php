@@ -24,6 +24,7 @@ use App\Http\Controllers\Candidate\JobController as CandidateJobController;
 use App\Http\Controllers\Candidate\ProfileController as CandidateProfileController;
 use App\Http\Controllers\Candidate\VerificationController as CandidateVerificationController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\VerificationController as ClientVerificationController;
 use App\Http\Controllers\Client\ProcurementDocumentController as ClientProcurementDocumentController;
 use App\Http\Controllers\Client\DirectorReportController as ClientDirectorReportController;
 use App\Http\Controllers\Client\EnterpriseReportController as ClientEnterpriseReportController;
@@ -49,6 +50,7 @@ use App\Http\Controllers\Recruitment\CandidateController as RecruitmentCandidate
 use App\Http\Controllers\Recruitment\DashboardController as RecruitmentDashboardController;
 use App\Http\Controllers\Recruitment\JobController as RecruitmentJobController;
 use App\Http\Controllers\Recruitment\ProfileController as RecruitmentProfileController;
+use App\Http\Controllers\Recruitment\VerificationController as RecruitmentVerificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,6 +170,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/candidate/identity-verification', [CandidateVerificationController::class, 'store'])->name('candidate.identity-verification.store');
     });
 
+    Route::middleware(['role:recruitment'])->group(function () {
+        Route::get('/recruitment/identity-verification', [RecruitmentVerificationController::class, 'show'])->name('recruitment.identity-verification.show');
+        Route::post('/recruitment/identity-verification', [RecruitmentVerificationController::class, 'store'])->name('recruitment.identity-verification.store');
+    });
+
+    Route::middleware(['role:client'])->group(function () {
+        Route::get('/client/identity-verification', [ClientVerificationController::class, 'show'])->name('client.identity-verification.show');
+        Route::post('/client/identity-verification', [ClientVerificationController::class, 'store'])->name('client.identity-verification.store');
+    });
+
     Route::middleware(['role:candidate', 'can:dashboard.view', 'identity.verified'])->group(function () {
         Route::get('/candidate/dashboard', CandidateDashboardController::class)->name('candidate.dashboard');
         Route::get('/candidate/profile', [CandidateProfileController::class, 'edit'])->name('candidate.profile.edit');
@@ -181,13 +193,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/candidate/jobs/{job}/apply', [CandidateApplicationController::class, 'store'])->name('candidate.applications.store');
     });
 
-    Route::middleware(['role:recruitment', 'can:dashboard.view'])->group(function () {
+    Route::middleware(['role:recruitment', 'can:dashboard.view', 'identity.verified'])->group(function () {
         Route::get('/recruitment/dashboard', RecruitmentDashboardController::class)->name('recruitment.dashboard');
         Route::get('/recruitment/profile', [RecruitmentProfileController::class, 'edit'])->name('recruitment.profile.edit');
         Route::put('/recruitment/profile', [RecruitmentProfileController::class, 'update'])->name('recruitment.profile.update');
         Route::get('/recruitment/jobs', [RecruitmentJobController::class, 'index'])->name('recruitment.jobs.index');
         Route::get('/recruitment/jobs/create', [RecruitmentJobController::class, 'create'])->name('recruitment.jobs.create');
+        Route::get('/recruitment/jobs/{job}/edit', [RecruitmentJobController::class, 'edit'])->name('recruitment.jobs.edit');
         Route::post('/recruitment/jobs', [RecruitmentJobController::class, 'store'])->name('recruitment.jobs.store');
+        Route::put('/recruitment/jobs/{job}', [RecruitmentJobController::class, 'update'])->name('recruitment.jobs.update');
+        Route::delete('/recruitment/jobs/{job}', [RecruitmentJobController::class, 'destroy'])->name('recruitment.jobs.destroy');
         Route::get('/recruitment/candidates', [RecruitmentCandidateController::class, 'index'])->name('recruitment.candidates.index');
         Route::get('/recruitment/applications', [RecruitmentApplicationController::class, 'index'])->name('recruitment.applications.index');
         Route::get('/recruitment/applications/{application}', [RecruitmentApplicationController::class, 'show'])->name('recruitment.applications.show');
@@ -229,7 +244,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/procurement/verifications/history/{verificationRecord}/retry', [ProcurementVerificationHistoryController::class, 'retry'])->name('procurement.verifications.retry');
     });
 
-    Route::middleware(['role:client', 'can:dashboard.view'])->group(function () {
+    Route::middleware(['role:client', 'can:dashboard.view', 'identity.verified'])->group(function () {
         Route::get('/client/dashboard', ClientDashboardController::class)->name('client.dashboard');
         Route::get('/client/procurement-records', [ClientProcurementRecordController::class, 'index'])->name('client.procurement-records.index');
         Route::get('/client/procurement-records/{procurementUser}', [ClientProcurementRecordController::class, 'show'])->name('client.procurement-records.show');

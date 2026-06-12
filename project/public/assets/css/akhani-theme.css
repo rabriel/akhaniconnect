@@ -1,12 +1,19 @@
 :root {
     --bs-primary: #e76505;
     --bs-primary-rgb: 231, 101, 5;
+    --bs-success: #18b76a;
+    --bs-success-rgb: 24, 183, 106;
     --bs-dark: #202124;
     --bs-dark-rgb: 32, 33, 36;
     --bs-link-color: #202124;
     --bs-link-hover-color: #202124;
     --bs-font-sans-serif: "Manrope", sans-serif;
     --ak-primary: #e76505;
+    --ak-success: #18b76a;
+    --ak-success-rgb: 24, 183, 106;
+    --ak-success-soft: #dff5e8;
+    --ak-success-soft-rgb: 223, 245, 232;
+    --ak-success-deep: #0f8a4f;
     --ak-text-primary: #202124;
     --ak-font-primary: "Manrope", sans-serif;
     --ak-font-heading: "Plus Jakarta Sans", sans-serif;
@@ -150,6 +157,22 @@ h6,
     border-color: var(--bs-primary) !important;
 }
 
+.btn-light-success {
+    color: var(--ak-success-deep) !important;
+    background-color: var(--ak-success-soft) !important;
+    border-color: transparent !important;
+}
+
+.btn-light-success:hover,
+.btn-light-success:focus,
+.btn-light-success:active,
+.btn-check:checked + .btn-light-success,
+.show > .btn-light-success.dropdown-toggle {
+    color: #ffffff !important;
+    background-color: var(--ak-success) !important;
+    border-color: var(--ak-success) !important;
+}
+
 .bg-primary,
 .aside.bg-primary {
     background-color: var(--bs-primary) !important;
@@ -205,6 +228,93 @@ h6,
 .ak-role-pill--default {
     background-color: rgba(107, 114, 128, 0.14);
     color: #4b5563;
+}
+
+.ak-verification-pill {
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.ak-verification-status {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ak-verification-pill i {
+    color: #ffffff;
+}
+
+.ak-verification-pill--verified {
+    background-color: var(--ak-success);
+}
+
+.ak-verification-pill--unverified {
+    background-color: #dc2626;
+}
+
+.ak-verification-label {
+    position: absolute;
+    left: calc(100% - 0.15rem);
+    top: -0.55rem;
+    font-family: var(--ak-font-heading);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.ak-verification-label--verified {
+    color: var(--ak-success);
+}
+
+.ak-verification-label--unverified {
+    color: #dc2626;
+}
+
+.text-success {
+    color: var(--ak-success) !important;
+}
+
+.bg-success {
+    background-color: var(--ak-success) !important;
+}
+
+.bg-light-success {
+    background-color: var(--ak-success-soft) !important;
+}
+
+.badge-light-success {
+    color: var(--ak-success-deep) !important;
+    background-color: var(--ak-success-soft) !important;
+}
+
+.alert-success {
+    color: var(--ak-success-deep) !important;
+    background-color: var(--ak-success-soft) !important;
+    border-color: rgba(var(--ak-success-rgb), 0.18) !important;
+}
+
+.alert-success .text-success,
+.alert-success .svg-icon-success i,
+.alert-success .svg-icon-success svg,
+.svg-icon-success,
+.svg-icon-success i {
+    color: var(--ak-success) !important;
+    fill: var(--ak-success) !important;
+}
+
+.progress-bar.bg-success {
+    background-color: var(--ak-success) !important;
 }
 
 .aside-logout .menu-link {
@@ -330,6 +440,25 @@ svg [stroke="#000000"] {
     border-color: var(--bs-primary) !important;
     color: #ffffff !important;
     box-shadow: none !important;
+}
+
+.swal2-icon.swal2-success {
+    border-color: rgba(var(--ak-success-rgb), 0.28) !important;
+    color: var(--ak-success) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(var(--ak-success-rgb), 0.2) !important;
+}
+
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: var(--ak-success) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-fix,
+.swal2-icon.swal2-success .swal2-success-circular-line-left,
+.swal2-icon.swal2-success .swal2-success-circular-line-right {
+    background-color: #ffffff !important;
 }
 
 .swal2-actions .swal2-confirm:hover,

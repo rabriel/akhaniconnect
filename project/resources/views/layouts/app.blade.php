@@ -214,6 +214,19 @@
 
                             @if (auth()->user()->hasRole('client'))
                                 <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('client.identity-verification.*') ? 'active' : '' }}"
+                                       href="{{ route('client.identity-verification.show') }}"
+                                       title="SA ID Verification"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-shield-check fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="menu-item py-3">
                                     <a class="menu-link menu-center {{ request()->routeIs('client.procurement-records.*') ? 'active' : '' }}"
                                        href="{{ route('client.procurement-records.index') }}"
                                        title="Procurement Records"
@@ -229,6 +242,19 @@
                             @endif
 
                             @if (auth()->user()->hasRole('recruitment'))
+                                <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('recruitment.identity-verification.*') ? 'active' : '' }}"
+                                       href="{{ route('recruitment.identity-verification.show') }}"
+                                       title="SA ID Verification"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-shield-check fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
                                 <div class="menu-item py-3">
                                     <a class="menu-link menu-center {{ request()->routeIs('recruitment.profile.*') ? 'active' : '' }}"
                                        href="{{ route('recruitment.profile.edit') }}"
@@ -387,7 +413,24 @@
                             </div>
 
                             <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                                <span class="badge ak-role-badge">{{ auth()->user()->role->name ?? 'Account' }}</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge ak-role-badge">{{ auth()->user()->role->name ?? 'Account' }}</span>
+                                    @if (auth()->user()->hasVerifiedIdentity())
+                                        <span class="ak-verification-status">
+                                            <span class="ak-verification-pill ak-verification-pill--verified">
+                                                <i class="bi bi-check-lg"></i>
+                                            </span>
+                                            <span class="ak-verification-label ak-verification-label--verified">Verified</span>
+                                        </span>
+                                    @else
+                                        <span class="ak-verification-status">
+                                            <span class="ak-verification-pill ak-verification-pill--unverified">
+                                                <i class="bi bi-x-lg"></i>
+                                            </span>
+                                            <span class="ak-verification-label ak-verification-label--unverified">Not Verified</span>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
