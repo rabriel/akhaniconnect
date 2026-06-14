@@ -74,126 +74,259 @@
                 $procurementProfile = $user->procurementProfile;
                 $directors = $procurementProfile?->directors ?? collect();
                 $verifiedDirectors = $directors->where('status', 'verified')->count();
+                $driverRecord = $user->verificationRecords->firstWhere('module', 'driver_licence');
+                $driverDocuments = $user->documents->where('category', 'driver_licence');
+                $driverStatus = $driverRecord?->status ?? 'pending';
+                $statusClass = fn (string $status): string => match ($status) {
+                    'verified' => 'success',
+                    'failed' => 'danger',
+                    'in_progress' => 'warning',
+                    default => 'primary',
+                };
+                $statusLabel = fn (string $status): string => str($status)->replace('_', ' ')->title();
             @endphp
 
-            <div class="accordion accordion-icon-toggle" id="procurement_profile_summary">
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_personal">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Personal Details</h3>
-                    </div>
-                    <div id="summary_personal" class="collapse show" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
+            <div class="accordion" id="procurement_profile_summary">
+                <div class="accordion-item border-0 mb-5 rounded overflow-hidden">
+                    <h2 class="accordion-header" id="summary_personal_heading">
+                        <button class="accordion-button bg-light-success bg-opacity-50 text-dark fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#summary_personal" aria-expanded="true" aria-controls="summary_personal">
+                            <span>Personal Details</span>
+                            <span class="badge badge-light-success ms-4">Verified Profile</span>
+                        </button>
+                    </h2>
+                    <div id="summary_personal" class="accordion-collapse collapse show" aria-labelledby="summary_personal_heading" data-bs-parent="#procurement_profile_summary">
+                        <div class="accordion-body bg-white pt-6">
                             <div class="row g-5">
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Full Name</div>
                                         <div class="fw-bold fs-5">{{ $user->full_name }}</div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Email Address</div>
                                         <div class="fw-bold fs-5 text-break">{{ $user->email }}</div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Phone</div>
-                                        <div class="fw-bold fs-5">{{ $user->phone }}</div>
+                                        <div class="fw-bold fs-5">{{ $user->phone ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">ID Number</div>
                                         <div class="fw-bold fs-5">{{ $profile?->id_number ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="rounded bg-light-success bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">City</div>
                                         <div class="fw-bold fs-5">{{ $profile?->city ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Province</div>
+                                        <div class="fw-bold fs-5">{{ $profile?->province ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Postal Code</div>
+                                        <div class="fw-bold fs-5">{{ $profile?->postal_code ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-success bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Gender</div>
+                                        <div class="fw-bold fs-5">{{ $profile?->gender ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_enterprise">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Enterprise Details</h3>
-                    </div>
-                    <div id="summary_enterprise" class="collapse" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
+                <div class="accordion-item border-0 mb-5 rounded overflow-hidden">
+                    <h2 class="accordion-header" id="summary_enterprise_heading">
+                        <button class="accordion-button collapsed bg-light-primary bg-opacity-50 text-dark fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#summary_enterprise" aria-expanded="false" aria-controls="summary_enterprise">
+                            <span>Enterprise Details</span>
+                            <span class="badge badge-light-primary ms-4">{{ filled($procurementProfile?->company_name) ? 'CIPC Synced' : 'Awaiting Verification' }}</span>
+                        </button>
+                    </h2>
+                    <div id="summary_enterprise" class="accordion-collapse collapse" aria-labelledby="summary_enterprise_heading" data-bs-parent="#procurement_profile_summary">
+                        <div class="accordion-body bg-white pt-6">
                             <div class="row g-5">
-                                <div class="col-md-6">
-                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Company Name</div>
                                         <div class="fw-bold fs-5">{{ $procurementProfile?->company_name ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Registration Number</div>
                                         <div class="fw-bold fs-5">{{ $procurementProfile?->registration_number ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">VAT Number</div>
                                         <div class="fw-bold fs-5">{{ $procurementProfile?->vat_number ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="rounded bg-light-primary bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Company Phone</div>
                                         <div class="fw-bold fs-5">{{ $procurementProfile?->company_phone ?: 'Not provided' }}</div>
                                     </div>
                                 </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Enterprise Status</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_status ?: 'Not provided' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-primary bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Last Synced</div>
+                                        <div class="fw-bold fs-5">{{ $procurementProfile?->enterprise_synced_at?->format('Y-m-d H:i') ?: 'Not synced yet' }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-5">
-                    <div class="accordion-header py-3 d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#summary_directors">
-                        <span class="accordion-icon">
-                            <i class="bi bi-chevron-right fs-4"></i>
-                        </span>
-                        <h3 class="fs-5 text-gray-800 fw-bold mb-0 ms-4">Enterprise Directors</h3>
-                    </div>
-                    <div id="summary_directors" class="collapse" data-bs-parent="#procurement_profile_summary">
-                        <div class="pt-5 ps-12">
+                <div class="accordion-item border-0 mb-5 rounded overflow-hidden">
+                    <h2 class="accordion-header" id="summary_directors_heading">
+                        <button class="accordion-button collapsed bg-light-info bg-opacity-50 text-dark fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#summary_directors" aria-expanded="false" aria-controls="summary_directors">
+                            <span>Enterprise Directors</span>
+                            <span class="badge badge-light-info ms-4">{{ $verifiedDirectors }} Verified</span>
+                        </button>
+                    </h2>
+                    <div id="summary_directors" class="accordion-collapse collapse" aria-labelledby="summary_directors_heading" data-bs-parent="#procurement_profile_summary">
+                        <div class="accordion-body bg-white pt-6">
                             <div class="row g-5">
-                                <div class="col-md-4">
-                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-info bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Saved Directors</div>
                                         <div class="fw-bold fs-5">{{ $directors->count() }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-info bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Verified Directors</div>
                                         <div class="fw-bold fs-5">{{ $verifiedDirectors }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="rounded bg-light-info bg-opacity-50 p-4 h-100">
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-info bg-opacity-25 p-4 h-100">
                                         <div class="text-muted fs-7 mb-1">Latest Director</div>
-                                        <div class="fw-bold fs-5">{{ $directors->first()?->full_name ?: 'Not added yet' }}</div>
+                                        <div class="fw-bold fs-5">{{ $directors->sortByDesc('updated_at')->first()?->full_name ?: 'Not added yet' }}</div>
                                     </div>
                                 </div>
                             </div>
+
+                            @if ($directors->isNotEmpty())
+                                <div class="table-responsive mt-6">
+                                    <table class="table align-middle table-row-dashed fs-6 gy-4">
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th>Director</th>
+                                                <th>ID Number</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="fw-semibold text-gray-700">
+                                            @foreach ($directors->take(5) as $director)
+                                                <tr>
+                                                    <td>{{ $director->full_name ?: 'Pending verification' }}</td>
+                                                    <td>{{ $director->id_number }}</td>
+                                                    <td>
+                                                        <span class="badge badge-light-{{ $statusClass($director->status ?? 'pending') }}">
+                                                            {{ $statusLabel($director->status ?? 'pending') }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
 
+                <div class="accordion-item border-0 rounded overflow-hidden">
+                    <h2 class="accordion-header" id="summary_driver_heading">
+                        <button class="accordion-button collapsed bg-light-warning bg-opacity-50 text-dark fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#summary_driver" aria-expanded="false" aria-controls="summary_driver">
+                            <span>Driver Licence</span>
+                            <span class="badge badge-light-{{ $statusClass($driverStatus) }} ms-4">{{ $statusLabel($driverStatus) }}</span>
+                        </button>
+                    </h2>
+                    <div id="summary_driver" class="accordion-collapse collapse" aria-labelledby="summary_driver_heading" data-bs-parent="#procurement_profile_summary">
+                        <div class="accordion-body bg-white pt-6">
+                            <div class="row g-5">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-warning bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Verification Status</div>
+                                        <div class="fw-bold fs-5">{{ $statusLabel($driverStatus) }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-warning bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Uploaded Files</div>
+                                        <div class="fw-bold fs-5">{{ $driverDocuments->count() }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-warning bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Last Verified</div>
+                                        <div class="fw-bold fs-5">{{ $driverRecord?->last_verified_at?->format('Y-m-d H:i') ?: 'Not verified yet' }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="rounded border border-gray-200 bg-light-warning bg-opacity-25 p-4 h-100">
+                                        <div class="text-muted fs-7 mb-1">Reference</div>
+                                        <div class="fw-bold fs-5 text-break">{{ $driverRecord?->provider_reference ?: 'Pending' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if ($driverDocuments->isNotEmpty())
+                                <div class="table-responsive mt-6">
+                                    <table class="table align-middle table-row-dashed fs-6 gy-4">
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th>File Name</th>
+                                                <th>Type</th>
+                                                <th>Uploaded</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="fw-semibold text-gray-700">
+                                            @foreach ($driverDocuments as $document)
+                                                <tr>
+                                                    <td>{{ $document->original_name }}</td>
+                                                    <td>{{ str($document->type)->replace('_', ' ')->title() }}</td>
+                                                    <td>{{ $document->uploaded_at?->format('Y-m-d H:i') ?: 'N/A' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="rounded border border-dashed border-gray-300 bg-light-warning bg-opacity-10 px-5 py-4 mt-6">
+                                    <div class="fw-bold mb-1">No driver licence files uploaded yet</div>
+                                    <div class="text-muted fs-7">Upload the front and optional back image to start driver licence verification.</div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -35,6 +35,45 @@
         </div>
     </div>
 
+    <div class="row g-5 g-xl-8 mb-8">
+        <div class="col-xl-4">
+            <div class="card h-100">
+                <div class="card-header border-0 pt-6">
+                    <div class="card-title">
+                        <h3 class="fw-bold m-0">User Role Distribution</h3>
+                    </div>
+                </div>
+                <div class="card-body pt-2">
+                    <div id="admin_role_distribution_chart" class="h-300px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card h-100">
+                <div class="card-header border-0 pt-6">
+                    <div class="card-title">
+                        <h3 class="fw-bold m-0">Verification Status Mix</h3>
+                    </div>
+                </div>
+                <div class="card-body pt-2">
+                    <div id="admin_verification_status_chart" class="h-300px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card h-100">
+                <div class="card-header border-0 pt-6">
+                    <div class="card-title">
+                        <h3 class="fw-bold m-0">Platform Activity Trend</h3>
+                    </div>
+                </div>
+                <div class="card-body pt-2">
+                    <div id="admin_platform_activity_chart" class="h-300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-5 g-xl-8">
         <div class="col-xl-6">
             <div class="card h-100">
@@ -79,3 +118,10 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        window.adminDashboardCharts = @json($charts);
+    </script>
+    <script src="{{ asset('assets/js/custom/admin-dashboard.js') }}"></script>
+@endpush

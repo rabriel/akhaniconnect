@@ -182,6 +182,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:candidate', 'can:dashboard.view', 'identity.verified'])->group(function () {
         Route::get('/candidate/dashboard', CandidateDashboardController::class)->name('candidate.dashboard');
+        Route::get('/candidate/verifications/driver-licence', [CandidateVerificationController::class, 'driverLicence'])->name('candidate.verifications.driver-licence');
+        Route::post('/candidate/verifications/driver-licence', [CandidateVerificationController::class, 'storeDriverLicence'])->name('candidate.verifications.driver-licence.store');
         Route::get('/candidate/profile', [CandidateProfileController::class, 'edit'])->name('candidate.profile.edit');
         Route::put('/candidate/profile', [CandidateProfileController::class, 'update'])->name('candidate.profile.update');
         Route::get('/candidate/documents', [CandidateDocumentController::class, 'index'])->name('candidate.documents.index');

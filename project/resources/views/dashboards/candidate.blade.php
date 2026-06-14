@@ -5,6 +5,63 @@
 ])
 
 @section('content')
+    @php
+        $progressTextClass = $progress === 100 ? 'text-success' : 'text-warning';
+        $progressTrackClass = $progress === 100 ? 'bg-light-success' : 'bg-light-warning';
+        $progressBarClass = $progress === 100 ? 'bg-success' : 'bg-warning';
+    @endphp
+
+    <div class="card mb-8">
+        <div class="card-body">
+            <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between align-items-start gap-6">
+                <div>
+                    <h2 class="mb-3">Hi, {{ $user->full_name }}</h2>
+                    <p class="text-gray-600 fs-6 mb-6">Complete your candidate profile and supporting details below so you are ready to apply confidently and be reviewed by recruiters.</p>
+                </div>
+                <div class="text-end">
+                    <span class="badge badge-light-primary fs-7">Account: Candidate</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-2">
+                <span class="fw-bold text-gray-700 me-3">Progress</span>
+                <span class="fw-bold {{ $progressTextClass }}">{{ $progress }}%</span>
+            </div>
+            <div class="progress h-10px {{ $progressTrackClass }}">
+                <div class="progress-bar {{ $progressBarClass }}" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-5 g-xl-8 mb-8">
+        @foreach ($steps as $step)
+            <div class="col-xl-6 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-start">
+                        <div class="symbol symbol-60px me-5">
+                            <span class="symbol-label {{ $step['status'] === 'verified' ? 'bg-light-success' : 'bg-light-danger' }}">
+                                <i class="bi {{ $step['status'] === 'verified' ? 'bi-check-circle' : 'bi-x-circle' }} fs-2 {{ $step['status'] === 'verified' ? 'text-success' : 'text-danger' }}"></i>
+                            </span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bolder fs-3 {{ $step['status'] === 'verified' ? 'text-success' : 'text-danger' }}">
+                                {{ ucfirst($step['status']) }}
+                            </div>
+                            <div class="fw-bold text-dark fs-5 mb-2">{{ $step['title'] }}</div>
+                            <div class="text-gray-500 fs-7 mb-4">{{ $step['description'] }}</div>
+                            @if (($step['exclude_from_progress'] ?? false) === true)
+                                <div class="text-muted fs-8 mb-4">Optional for progress tracking.</div>
+                            @endif
+                            @if ($step['route'])
+                                <a href="{{ $step['route'] }}" class="btn btn-sm {{ $step['status'] === 'verified' ? 'btn-light-success' : 'btn-light-primary' }}">Open</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
     <div class="row g-5 g-xl-8 mb-8">
         <div class="col-xl-4">
             <div class="card h-100">

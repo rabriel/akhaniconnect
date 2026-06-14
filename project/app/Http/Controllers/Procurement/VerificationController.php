@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Procurement;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Procurement\StoreBankAccountVerificationRequest;
-use App\Http\Requests\Procurement\StoreDriverLicenceVerificationRequest;
+use App\Http\Requests\Verification\StoreDriverLicenceVerificationRequest;
 use App\Http\Requests\Verification\StoreSouthAfricanIdVerificationRequest;
 use App\Services\Document\DocumentUploadService;
 use App\Services\Procurement\ProcurementOnboardingService;

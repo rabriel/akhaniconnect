@@ -1,7 +1,7 @@
 @extends('layouts.app', [
-    'title' => 'Driver Licence Verification | Akhani Connect',
+    'title' => 'Candidate Driver Licence Verification | Akhani Connect',
     'heading' => 'Driver Licence Verification',
-    'subheading' => 'Submit driver licence images and track verification attempts.',
+    'subheading' => 'Upload your licence images and verify them through the API.',
 ])
 
 @section('content')
@@ -12,14 +12,14 @@
             </div>
         </div>
         <div class="card-body pt-0">
-            <form method="POST" action="{{ route('procurement.verifications.driver-licence.store') }}" enctype="multipart/form-data" id="procurement_driver_licence_form">
+            <form method="POST" action="{{ route('candidate.verifications.driver-licence.store') }}" enctype="multipart/form-data" id="candidate_driver_licence_form">
                 @csrf
 
                 <div class="row g-6 mb-8">
                     <div class="col-lg-6">
-                        <label for="procurement_front_image" class="form-label required">Front of Licence</label>
-                        <label class="ak-upload-tile" for="procurement_front_image" data-upload-tile>
-                            <input id="procurement_front_image" type="file" name="front_image" class="d-none" accept=".png,.jpg,.jpeg" required data-upload-input>
+                        <label for="candidate_front_image" class="form-label required">Front of Licence</label>
+                        <label class="ak-upload-tile" for="candidate_front_image" data-upload-tile>
+                            <input id="candidate_front_image" type="file" name="front_image" class="d-none" accept=".png,.jpg,.jpeg" required data-upload-input>
                             <span class="ak-upload-tile__icon">
                                 <i class="bi bi-upload"></i>
                             </span>
@@ -29,9 +29,9 @@
                         </label>
                     </div>
                     <div class="col-lg-6">
-                        <label for="procurement_back_image" class="form-label">Back of Licence <span class="text-muted">(Optional)</span></label>
-                        <label class="ak-upload-tile" for="procurement_back_image" data-upload-tile>
-                            <input id="procurement_back_image" type="file" name="back_image" class="d-none" accept=".png,.jpg,.jpeg" data-upload-input>
+                        <label for="candidate_back_image" class="form-label">Back of Licence <span class="text-muted">(Optional)</span></label>
+                        <label class="ak-upload-tile" for="candidate_back_image" data-upload-tile>
+                            <input id="candidate_back_image" type="file" name="back_image" class="d-none" accept=".png,.jpg,.jpeg" data-upload-input>
                             <span class="ak-upload-tile__icon">
                                 <i class="bi bi-upload"></i>
                             </span>

@@ -200,6 +200,15 @@ class ProcurementOnboardingService
                 'route' => route('procurement.directors.index'),
             ],
             [
+                'title' => 'Driver Licence',
+                'status' => $this->hasVerifiedModule($user, 'driver_licence') ? 'verified' : 'pending',
+                'description' => $this->hasVerifiedModule($user, 'driver_licence')
+                    ? 'Your driver licence has been verified through the API.'
+                    : 'Upload front and back licence images to verify your driver licence.',
+                'route' => route('procurement.verifications.driver-licence'),
+                'exclude_from_progress' => true,
+            ],
+            [
                 'title' => 'Documents Upload',
                 'status' => $this->hasSupportingDocuments($user) ? 'verified' : 'pending',
                 'description' => $this->hasSupportingDocuments($user)

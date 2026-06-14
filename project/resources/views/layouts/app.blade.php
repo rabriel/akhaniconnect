@@ -130,6 +130,19 @@
                                     </a>
                                 </div>
                                 <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('procurement.verifications.driver-licence*') ? 'active' : '' }}"
+                                       href="{{ route('procurement.verifications.driver-licence') }}"
+                                       title="Driver Licence Verification"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-file-earmark-arrow-up fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="menu-item py-3">
                                     <a class="menu-link menu-center {{ request()->routeIs('procurement.documents.*') ? 'active' : '' }}"
                                        href="{{ route('procurement.documents.index') }}"
                                        title="Documents"
@@ -168,6 +181,19 @@
                                        data-bs-placement="right">
                                         <span class="menu-icon me-0">
                                             <i class="bi bi-people fs-2"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="menu-item py-3">
+                                    <a class="menu-link menu-center {{ request()->routeIs('candidate.verifications.driver-licence') ? 'active' : '' }}"
+                                       href="{{ route('candidate.verifications.driver-licence') }}"
+                                       title="Driver Licence Verification"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover"
+                                       data-bs-dismiss="click"
+                                       data-bs-placement="right">
+                                        <span class="menu-icon me-0">
+                                            <i class="bi bi-file-earmark-arrow-up fs-2"></i>
                                         </span>
                                     </a>
                                 </div>
@@ -422,7 +448,7 @@
                                             </span>
                                             <span class="ak-verification-label ak-verification-label--verified">Verified</span>
                                         </span>
-                                    @else
+                                    @elseif (auth()->user()->hasRole('candidate') || auth()->user()->hasRole('client') || auth()->user()->hasRole('recruitment') || auth()->user()->hasRole('procurement'))
                                         <span class="ak-verification-status">
                                             <span class="ak-verification-pill ak-verification-pill--unverified">
                                                 <i class="bi bi-x-lg"></i>
