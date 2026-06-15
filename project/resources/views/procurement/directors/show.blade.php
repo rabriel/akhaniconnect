@@ -30,7 +30,7 @@
         <div class="card-body py-8">
             <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-6">
                 <div>
-                    <div class="fs-2hx fw-bold">{{ $director->full_name ?: 'Director Record' }}</div>
+                    <div class="fs-2 fw-bolder">{{ $director->full_name ?: 'Director Record' }}</div>
                     <div class="text-muted mt-2">
                         {{ $director->title ?: 'Title not available' }}
                         @if ($director->position)

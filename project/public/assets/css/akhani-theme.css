@@ -108,6 +108,33 @@ h6,
     margin-inline: auto;
 }
 
+.auth-password-field {
+    position: relative;
+}
+
+.auth-password-field .form-control {
+    padding-right: 3.5rem;
+}
+
+.auth-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: var(--bs-primary);
+    line-height: 1;
+    z-index: 3;
+}
+
+.auth-password-toggle:hover,
+.auth-password-toggle:focus {
+    color: var(--ak-text-primary);
+    box-shadow: none;
+}
+
 @media (max-width: 575.98px) {
     .auth-card {
         width: calc(100vw - 2rem);

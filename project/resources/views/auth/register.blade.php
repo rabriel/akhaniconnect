@@ -52,13 +52,23 @@
 
             <div class="mb-10 fv-row">
                 <label class="form-label fw-bolder text-dark fs-6">Password</label>
-                <input class="form-control form-control-lg form-control-solid" type="password" name="password" required />
+                <div class="auth-password-field">
+                    <input id="register_password" class="form-control form-control-lg form-control-solid" type="password" name="password" required />
+                    <button type="button" class="auth-password-toggle" data-password-toggle data-password-target="register_password" aria-label="Show password" aria-pressed="false">
+                        <i class="bi bi-eye fs-4"></i>
+                    </button>
+                </div>
                 <div class="text-muted mt-2">Use 8 or more characters with a mix of letters, numbers and symbols.</div>
             </div>
 
             <div class="fv-row mb-10">
                 <label class="form-label fw-bolder text-dark fs-6">Confirm Password</label>
-                <input class="form-control form-control-lg form-control-solid" type="password" name="password_confirmation" required />
+                <div class="auth-password-field">
+                    <input id="register_password_confirmation" class="form-control form-control-lg form-control-solid" type="password" name="password_confirmation" required />
+                    <button type="button" class="auth-password-toggle" data-password-toggle data-password-target="register_password_confirmation" aria-label="Show password" aria-pressed="false">
+                        <i class="bi bi-eye fs-4"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="text-center">
@@ -69,3 +79,7 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/custom/auth-password-toggle.js') }}"></script>
+@endpush

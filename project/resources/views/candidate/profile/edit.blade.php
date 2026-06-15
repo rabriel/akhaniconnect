@@ -97,7 +97,7 @@
                         <label class="form-label">Salary Expectation</label>
                         <input type="text" name="salary_expectation" class="form-control" value="{{ old('salary_expectation', $user->candidateProfile?->salary_expectation) }}" placeholder="R25 000 per month">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label">Highest Education Level</label>
                         <select name="education_level" class="form-select">
                             <option value="">Select education level</option>

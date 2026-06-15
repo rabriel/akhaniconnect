@@ -29,7 +29,12 @@
                     <label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
                     <a href="{{ route('password.request') }}" class="link-primary fs-6">Forgot Password?</a>
                 </div>
-                <input class="form-control form-control-lg form-control-solid" type="password" name="password" required />
+                <div class="auth-password-field">
+                    <input id="login_password" class="form-control form-control-lg form-control-solid" type="password" name="password" required />
+                    <button type="button" class="auth-password-toggle" data-password-toggle data-password-target="login_password" aria-label="Show password" aria-pressed="false">
+                        <i class="bi bi-eye fs-4"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="text-center">
@@ -40,3 +45,7 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/custom/auth-password-toggle.js') }}"></script>
+@endpush

@@ -176,7 +176,7 @@
                                                         <th>Verified Modules</th>
                                                         <th>Directors</th>
                                                         <th>Documents</th>
-                                                        <th>Last Verified</th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody class="fw-semibold text-gray-700">
@@ -190,7 +190,7 @@
                                                             <td>{{ $record['verified_modules'] }}</td>
                                                             <td>{{ $record['directors_verified'] }}</td>
                                                             <td>{{ $record['documents_uploaded'] }}</td>
-                                                            <td>{{ $record['last_verified_at']?->format('d M Y H:i') ?? 'N/A' }}</td>
+
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
