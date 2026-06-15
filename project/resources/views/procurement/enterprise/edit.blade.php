@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="form-text mt-3">Format example: <strong>2014/081962/07</strong> or digits only like <strong>201408196207</strong>.</div>
+                <div class="form-text mt-3">Format example: <strong>2014/000000/07</strong>.</div>
                 <div class="form-text mt-2">This is the only field you can enter manually. Company details below are populated from the CIPC API.</div>
             </form>
         </div>
