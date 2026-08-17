@@ -129,6 +129,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's POPIA acknowledgement history.
+     */
+    public function privacyAcknowledgements(): HasMany
+    {
+        return $this->hasMany(PrivacyAcknowledgement::class);
+    }
+
+    /**
      * Get the jobs posted by the recruiter.
      */
     public function jobs(): HasMany

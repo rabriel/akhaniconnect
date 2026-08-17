@@ -579,3 +579,116 @@ svg [stroke="#000000"] {
     color: #ffffff !important;
     box-shadow: none !important;
 }
+
+.ak-popia-card {
+    /*max-width: 980px;*/
+    max-width: 100%;
+}
+
+.ak-popia-panel {
+    height: 100%;
+    padding: 1.5rem;
+    border: 1px solid rgba(244, 122, 32, 0.12);
+    border-radius: 1rem;
+    background: linear-gradient(180deg, rgba(244, 122, 32, 0.06) 0%, rgba(255, 255, 255, 0.98) 100%);
+}
+
+.ak-popia-list {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: var(--ak-text-primary);
+    line-height: 1.85;
+}
+
+.ak-popia-list li + li {
+    margin-top: 0.75rem;
+}
+
+.ak-popia-form .form-check {
+    border: 1px solid rgba(244, 122, 32, 0.12);
+}
+
+.ak-popia-check {
+    width: 100%;
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(244, 122, 32, 0.18);
+    background: linear-gradient(180deg, rgba(244, 122, 32, 0.05) 0%, rgba(255, 255, 255, 0.98) 100%);
+}
+
+.ak-popia-check__input {
+    flex: 0 0 auto;
+    width: 1.65rem !important;
+    height: 1.65rem !important;
+    min-width: 1.65rem;
+    border: 2px solid var(--bs-primary) !important;
+    border-radius: 0.45rem !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+.ak-popia-check__input:checked {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    background-size: 0.95rem;
+}
+
+.ak-popia-check__input:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15) !important;
+}
+
+.ak-popia-check__label {
+    flex: 1 1 auto;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.ak-popia-version .badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.ak-popia-accordion .accordion-item {
+    border: 1px solid rgba(244, 122, 32, 0.12);
+    border-radius: 1rem !important;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.ak-popia-accordion .accordion-item + .accordion-item {
+    margin-top: 1rem;
+}
+
+.ak-popia-accordion .accordion-button {
+    background-color: rgba(244, 122, 32, 0.06);
+    color: var(--ak-text-primary);
+    box-shadow: none;
+}
+
+.ak-popia-accordion .accordion-button:not(.collapsed) {
+    background-color: rgba(244, 122, 32, 0.1);
+    color: var(--ak-text-primary);
+    box-shadow: none;
+}
+
+.ak-popia-accordion .accordion-button:focus {
+    box-shadow: none;
+}
+
+@media (max-width: 991.98px) {
+    .ak-popia-card {
+        max-width: 100%;
+    }
+
+    .ak-popia-check {
+        min-height: auto;
+        align-items: flex-start;
+    }
+
+    .ak-popia-check__input {
+        margin-top: 0.2rem;
+    }
+}

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PopiaAcknowledgementController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Candidate\ApplicationController as CandidateApplicationController;
@@ -68,6 +69,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/privacy/notice', [PopiaAcknowledgementController::class, 'privacyNotice'])->name('privacy.notice');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
@@ -82,24 +85,28 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    Route::get('/dashboard', DashboardController::class)
-        ->middleware('can:dashboard.view')
-        ->name('dashboard');
-
-    Route::get('/account/profile', [ProfileController::class, 'edit'])
-        ->middleware('can:profile.view')
-        ->name('profile.edit');
-    Route::put('/account/profile', [ProfileController::class, 'update'])
-        ->middleware(['can:profile.update', 'identity.verified'])
-        ->name('profile.update');
+    Route::get('/popia/acknowledgement', [PopiaAcknowledgementController::class, 'show'])->name('popia.notice.show');
+    Route::post('/popia/acknowledgement', [PopiaAcknowledgementController::class, 'store'])->name('popia.notice.store');
     Route::get('/account/profile/{profile}/avatar', [ProfileController::class, 'showAvatar'])
         ->name('profile.avatar.show');
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->middleware('identity.verified')
-        ->name('notifications.index');
-    Route::put('/notifications/{notification}', [NotificationController::class, 'update'])
-        ->middleware('identity.verified')
-        ->name('notifications.update');
+
+    Route::middleware('popia.acknowledged')->group(function () {
+        Route::get('/dashboard', DashboardController::class)
+            ->middleware('can:dashboard.view')
+            ->name('dashboard');
+
+        Route::get('/account/profile', [ProfileController::class, 'edit'])
+            ->middleware('can:profile.view')
+            ->name('profile.edit');
+        Route::put('/account/profile', [ProfileController::class, 'update'])
+            ->middleware(['can:profile.update', 'identity.verified'])
+            ->name('profile.update');
+        Route::get('/notifications', [NotificationController::class, 'index'])
+            ->middleware('identity.verified')
+            ->name('notifications.index');
+        Route::put('/notifications/{notification}', [NotificationController::class, 'update'])
+            ->middleware('identity.verified')
+            ->name('notifications.update');
 
     Route::middleware(['role:superadmin', 'can:dashboard.view'])->group(function () {
         Route::get('/admin/dashboard', AdminDashboardController::class)->name('admin.dashboard');
@@ -255,5 +262,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/client/procurement-records/{procurementUser}/enterprise-report', [ClientEnterpriseReportController::class, 'show'])->name('client.procurement-records.enterprise-report');
         Route::get('/client/procurement-records/{procurementUser}/directors/{director}/report', [ClientDirectorReportController::class, 'show'])->name('client.procurement-records.director-report');
         Route::get('/client/procurement-records/{procurementUser}/documents/{document}', [ClientProcurementDocumentController::class, 'show'])->name('client.procurement-records.documents.show');
+    });
     });
 });

@@ -18,7 +18,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create(['company_name' => 'Akhani Client']);
 
         $procurement = User::factory()->withRole(4)->create([
@@ -49,7 +49,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $verified = User::factory()->withRole(4)->create();
@@ -85,7 +85,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create([
@@ -162,7 +162,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create([
@@ -187,7 +187,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create();
@@ -209,7 +209,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create();
@@ -237,7 +237,7 @@ class WorkspaceTest extends TestCase
         Storage::fake('public');
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create();
@@ -274,7 +274,7 @@ class WorkspaceTest extends TestCase
         Notification::fake();
 
         $client = User::factory()->withRole(5)->create();
-        $client->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedProfile($client);
         $client->clientProfile()->create();
 
         $procurement = User::factory()->withRole(4)->create();
@@ -303,5 +303,20 @@ class WorkspaceTest extends TestCase
         $this->actingAs($candidate)
             ->get(route('client.procurement-records.index'))
             ->assertForbidden();
+    }
+
+    private function createVerifiedProfile(User $user, array $attributes = []): void
+    {
+        $user->profile()->create(array_merge([
+            'country' => 'ZA',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ], $attributes));
+
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
     }
 }

@@ -20,7 +20,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $user = User::factory()->withRole(3)->create();
-        $user->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($user);
         $user->recruitmentProfile()->create();
 
         $this->actingAs($user)
@@ -64,7 +64,7 @@ class WorkspaceTest extends TestCase
             'email' => 'recruitment@test.local',
             'phone' => '0825551001',
         ]);
-        $user->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($user);
         $user->recruitmentProfile()->create();
 
         $response = $this->actingAs($user)->put(route('recruitment.profile.update'), [
@@ -94,7 +94,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $user = User::factory()->withRole(3)->create();
-        $user->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($user);
         $user->recruitmentProfile()->create([
             'company_name' => 'Akhani Talent Hub',
         ]);
@@ -106,6 +106,7 @@ class WorkspaceTest extends TestCase
             'employment_type' => 'Permanent',
             'description' => 'Lead procurement analysis, stakeholder reporting, and verification workflow support.',
             'status' => 'published',
+            'published_at' => now()->toDateString(),
         ]);
 
         $response->assertRedirect(route('recruitment.jobs.index'));
@@ -124,7 +125,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $recruiter = User::factory()->withRole(3)->create();
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $candidate = User::factory()->withRole(2)->create();
@@ -164,7 +165,7 @@ class WorkspaceTest extends TestCase
         $this->seed();
 
         $recruiter = User::factory()->withRole(3)->create();
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $gautengCandidate = User::factory()->withRole(2)->create([
@@ -217,7 +218,7 @@ class WorkspaceTest extends TestCase
         Storage::fake('public');
 
         $recruiter = User::factory()->withRole(3)->create();
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $candidate = User::factory()->withRole(2)->create();
@@ -313,7 +314,7 @@ class WorkspaceTest extends TestCase
             'first_name' => 'Lerato',
             'surname' => 'Recruiter',
         ]);
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $candidate = User::factory()->withRole(2)->create();
@@ -353,7 +354,7 @@ class WorkspaceTest extends TestCase
         Storage::fake('public');
 
         $recruiter = User::factory()->withRole(3)->create();
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $candidate = User::factory()->withRole(2)->create();
@@ -407,7 +408,7 @@ class WorkspaceTest extends TestCase
         Storage::fake('public');
 
         $recruiter = User::factory()->withRole(3)->create();
-        $recruiter->profile()->create(['country' => 'ZA']);
+        $this->createVerifiedRecruiterProfile($recruiter);
         $recruiter->recruitmentProfile()->create(['company_name' => 'Akhani Talent Hub']);
 
         $candidate = User::factory()->withRole(2)->create();
@@ -465,5 +466,20 @@ class WorkspaceTest extends TestCase
         $this->actingAs($user)
             ->get(route('recruitment.jobs.index'))
             ->assertForbidden();
+    }
+
+    private function createVerifiedRecruiterProfile(User $user, array $attributes = []): void
+    {
+        $user->profile()->create(array_merge([
+            'country' => 'ZA',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ], $attributes));
+
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
     }
 }

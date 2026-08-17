@@ -76,6 +76,20 @@
                                 </a>
                             </div>
 
+                            <div class="menu-item py-3">
+                                <a class="menu-link menu-center {{ request()->routeIs('popia.notice.*') || request()->routeIs('privacy.notice') ? 'active' : '' }}"
+                                   href="{{ route('privacy.notice') }}"
+                                   title="POPIA & Privacy"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-trigger="hover"
+                                   data-bs-dismiss="click"
+                                   data-bs-placement="right">
+                                    <span class="menu-icon me-0">
+                                        <i class="bi bi-shield-lock fs-2"></i>
+                                    </span>
+                                </a>
+                            </div>
+
                             @if (auth()->user()->hasRole('procurement'))
                                 <div class="menu-item py-3">
                                     <a class="menu-link menu-center {{ request()->routeIs('procurement.identity-verification.*') ? 'active' : '' }}"

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\Analytics\UserActivityLogger;
-use App\Services\Auth\LoginRedirectService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,12 +25,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(
         LoginRequest $request,
-        LoginRedirectService $loginRedirectService,
         UserActivityLogger $userActivityLogger
     ): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
+        $request->session()->forget('popia_acknowledged');
 
         $request->user()->forceFill([
             'last_login_at' => now(),
@@ -44,7 +43,7 @@ class AuthenticatedSessionController extends Controller
             'login'
         );
 
-        return redirect()->route($loginRedirectService->resolveDashboardRouteName($request->user()));
+        return redirect()->route('popia.notice.show');
     }
 
     /**
@@ -54,6 +53,7 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::guard('web')->logout();
 
+        $request->session()->forget('popia_acknowledged');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

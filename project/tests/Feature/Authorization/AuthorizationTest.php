@@ -473,7 +473,7 @@ class AuthorizationTest extends TestCase
             'password' => 'Akhaniconnect!1',
         ]);
 
-        $response->assertRedirect(route('admin.dashboard'));
+        $response->assertRedirect(route('popia.notice.show'));
 
         $admin = $this->superadmin();
         $activity = UserActivity::query()
@@ -514,7 +514,16 @@ class AuthorizationTest extends TestCase
         $this->seed();
 
         $user = User::factory()->withRole(3)->create();
-        $user->profile()->create(['country' => 'ZA']);
+        $user->profile()->create([
+            'country' => 'ZA',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->put(route('profile.update'), [
             'first_name' => 'Updated',
@@ -621,7 +630,16 @@ class AuthorizationTest extends TestCase
         Storage::fake('public');
 
         $user = User::factory()->withRole(3)->create();
-        $user->profile()->create(['country' => 'ZA']);
+        $user->profile()->create([
+            'country' => 'ZA',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
+        $user->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
 
         $response = $this->actingAs($user)->put(route('profile.update'), [
             'first_name' => 'Updated',

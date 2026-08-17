@@ -20,7 +20,16 @@ class InboxTest extends TestCase
             'surname' => 'Sender',
         ]);
         $procurement = User::factory()->withRole(4)->create();
-        $procurement->profile()->create(['country' => 'ZA']);
+        $procurement->profile()->create([
+            'country' => 'ZA',
+            'identity_verified' => true,
+            'identity_verified_at' => now(),
+        ]);
+        $procurement->verificationRecords()->create([
+            'module' => 'sa_identity',
+            'provider' => 'verifynow',
+            'status' => 'verified',
+        ]);
         $procurement->notify(new ProcurementRecordMessageNotification(
             $client,
             'Verification follow-up',

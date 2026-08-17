@@ -75,7 +75,7 @@ class AuthenticationTest extends TestCase
             'password' => 'Akhaniconnect!1',
         ]);
 
-        $response->assertRedirect(route('admin.dashboard'));
+        $response->assertRedirect(route('popia.notice.show'));
     }
 
     public function test_procurement_user_login_redirects_to_identity_verification_when_not_verified(): void
@@ -92,7 +92,7 @@ class AuthenticationTest extends TestCase
             'password' => 'SecurePass123!',
         ]);
 
-        $response->assertRedirect(route('procurement.identity-verification.show'));
+        $response->assertRedirect(route('popia.notice.show'));
     }
 
     public function test_verified_candidate_login_redirects_to_candidate_dashboard(): void
@@ -114,7 +114,7 @@ class AuthenticationTest extends TestCase
             'password' => 'SecurePass123!',
         ]);
 
-        $response->assertRedirect(route('candidate.dashboard'));
+        $response->assertRedirect(route('popia.notice.show'));
     }
 
     public function test_user_can_request_a_password_reset_link(): void
@@ -161,7 +161,7 @@ class AuthenticationTest extends TestCase
             'password' => 'NewSecurePass123!',
         ]);
 
-        $loginResponse->assertRedirect(route('candidate.identity-verification.show'));
+        $loginResponse->assertRedirect(route('popia.notice.show'));
     }
 
     public function test_welcome_email_template_contains_akhani_logo(): void
