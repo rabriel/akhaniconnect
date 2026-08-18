@@ -28,8 +28,8 @@
                 </div>
 
                 <div class="d-flex flex-center flex-column-auto p-10 position-relative">
-                    <div class="d-flex align-items-center fw-bold fs-6">
-                        <span class="text-muted px-2">&copy; Copyright 2026 | Akhani Connect | All Rights Reserved</span>
+                    <div class="d-flex align-items-center fw-bold fs-6" style="border-radius:8px; padding:15px; max-width: 500px; background: #fff;box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;">
+                        <span class="text-muted px-2"><strong>Akhani Connect</strong> is committed to protecting your personal information and processes personal data in accordance with the Protection of Personal Information Act (POPIA).</span>
                     </div>
                 </div>
             </div>

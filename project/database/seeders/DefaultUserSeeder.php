@@ -19,7 +19,7 @@ class DefaultUserSeeder extends Seeder
             [
                 'role_id' => 1,
                 'email' => 'admin@akhaniconnect.co.za',
-                'password' => 'TestingAccount@2026',
+                'password' => 'AkhaniDemo!2026',
                 'first_name' => 'Aisha',
                 'surname' => 'Nkosi',
                 'phone' => '0820000001',
@@ -34,7 +34,7 @@ class DefaultUserSeeder extends Seeder
             [
                 'role_id' => 2,
                 'email' => 'candidate@akhaniconnect.co.za',
-                'password' => 'TestingAccount@2026',
+                'password' => 'AkhaniDemo!2026',
                 'first_name' => 'Themba',
                 'surname' => 'Mokoena',
                 'phone' => '0820000002',
@@ -60,7 +60,7 @@ class DefaultUserSeeder extends Seeder
             [
                 'role_id' => 3,
                 'email' => 'recruitment@akhaniconnect.co.za',
-                'password' => 'TestingAccount@2026',
+                'password' => 'AkhaniDemo!2026',
                 'first_name' => 'Refilwe',
                 'surname' => 'Naidoo',
                 'phone' => '0820000003',
@@ -82,7 +82,7 @@ class DefaultUserSeeder extends Seeder
             [
                 'role_id' => 4,
                 'email' => 'procurement@akhaniconnect.co.za',
-                'password' => 'TestingAccount@2026',
+                'password' => 'AkhaniDemo!2026',
                 'first_name' => 'Lerato',
                 'surname' => 'Mabena',
                 'phone' => '0820000004',
@@ -109,7 +109,7 @@ class DefaultUserSeeder extends Seeder
             [
                 'role_id' => 5,
                 'email' => 'client@akhaniconnect.co.za',
-                'password' => 'TestingAccount@2026',
+                'password' => 'AkhaniDemo!2026',
                 'first_name' => 'Nandi',
                 'surname' => 'Dlamini',
                 'phone' => '0820000005',
